@@ -46,6 +46,7 @@ import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtMapBuilder;
 import org.cloudburstmc.nbt.NbtType;
 import org.cloudburstmc.nbt.NbtUtils;
+import org.cloudburstmc.protocol.bedrock.codec.v748.Bedrock_v748;
 import org.cloudburstmc.protocol.bedrock.codec.v766.Bedrock_v766;
 import org.cloudburstmc.protocol.bedrock.codec.v776.Bedrock_v776;
 import org.cloudburstmc.protocol.bedrock.codec.v786.Bedrock_v786;
@@ -119,52 +120,114 @@ public class ItemRegistryPopulator {
         GeyserMappingItem remap(Item item, GeyserMappingItem mapping);
     }
 
-    public static void populate() {
-        // 1.21.5
-        Map<Item, Item> itemFallbacks = new HashMap<>();
-        itemFallbacks.put(Items.BUSH, Items.SHORT_GRASS);
-        itemFallbacks.put(Items.CACTUS_FLOWER, Items.BUBBLE_CORAL_FAN);
-        itemFallbacks.put(Items.FIREFLY_BUSH, Items.SHORT_GRASS);
-        itemFallbacks.put(Items.LEAF_LITTER, Items.PINK_PETALS);
-        itemFallbacks.put(Items.SHORT_DRY_GRASS, Items.DEAD_BUSH);
-        itemFallbacks.put(Items.TALL_DRY_GRASS, Items.TALL_GRASS);
-        itemFallbacks.put(Items.WILDFLOWERS, Items.PINK_PETALS);
-        itemFallbacks.put(Items.TEST_BLOCK, Items.STRUCTURE_BLOCK);
-        itemFallbacks.put(Items.TEST_INSTANCE_BLOCK, Items.JIGSAW);
-        itemFallbacks.put(Items.BLUE_EGG, Items.EGG);
-        itemFallbacks.put(Items.BROWN_EGG, Items.EGG);
+    private static final Map<Integer, Map<Item, Item>> FALLBACKS_BY_PROTOCOL = new HashMap<>();
 
-        // Fallbacks for 1.21.6 items (1.21.6 -> 1.21.5)
-        itemFallbacks.put(Items.BLACK_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.BLUE_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.BROWN_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.RED_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.GREEN_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.YELLOW_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.ORANGE_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.MAGENTA_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.LIGHT_BLUE_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.LIME_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.PINK_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.GRAY_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.CYAN_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.PURPLE_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.LIGHT_GRAY_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.WHITE_HARNESS, Items.SADDLE);
-        itemFallbacks.put(Items.HAPPY_GHAST_SPAWN_EGG, Items.EGG);
-        itemFallbacks.put(Items.DRIED_GHAST, Items.PLAYER_HEAD);
-        itemFallbacks.put(Items.MUSIC_DISC_TEARS, Items.MUSIC_DISC_5);
-        itemFallbacks.put(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP);
-
+    static {
+        // Base: 1.21.80
         Map<Item, Item> fallbacks1_21_80 = new HashMap<>();
         fallbacks1_21_80.put(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP);
         fallbacks1_21_80.put(Items.MUSIC_DISC_TEARS, Items.MUSIC_DISC_5);
 
+        // 1.21.70 inherits 1.21.80
+        Map<Item, Item> fallbacks1_21_70 = new HashMap<>(fallbacks1_21_80);
+        fallbacks1_21_70.put(Items.BLACK_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.BLUE_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.BROWN_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.RED_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.GREEN_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.YELLOW_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.ORANGE_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.MAGENTA_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.LIGHT_BLUE_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.LIME_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.PINK_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.GRAY_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.CYAN_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.PURPLE_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.LIGHT_GRAY_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.WHITE_HARNESS, Items.SADDLE);
+        fallbacks1_21_70.put(Items.HAPPY_GHAST_SPAWN_EGG, Items.EGG);
+        fallbacks1_21_70.put(Items.DRIED_GHAST, Items.PLAYER_HEAD);
+
+        // 1.21.60 inherits 1.21.70
+        Map<Item, Item> fallbacks1_21_60 = new HashMap<>(fallbacks1_21_70);
+        fallbacks1_21_60.put(Items.BUSH, Items.SHORT_GRASS);
+        fallbacks1_21_60.put(Items.CACTUS_FLOWER, Items.BUBBLE_CORAL_FAN);
+        fallbacks1_21_60.put(Items.FIREFLY_BUSH, Items.SHORT_GRASS);
+        fallbacks1_21_60.put(Items.LEAF_LITTER, Items.PINK_PETALS);
+        fallbacks1_21_60.put(Items.SHORT_DRY_GRASS, Items.DEAD_BUSH);
+        fallbacks1_21_60.put(Items.TALL_DRY_GRASS, Items.TALL_GRASS);
+        fallbacks1_21_60.put(Items.WILDFLOWERS, Items.PINK_PETALS);
+        fallbacks1_21_60.put(Items.BLUE_EGG, Items.EGG);
+        fallbacks1_21_60.put(Items.BROWN_EGG, Items.EGG);
+
+        // 1.21.50 inherits 1.21.60
+        Map<Item, Item> fallbacks1_21_50 = new HashMap<>(fallbacks1_21_60);
+        fallbacks1_21_50.put(Items.TEST_BLOCK, Items.STRUCTURE_BLOCK);
+        fallbacks1_21_50.put(Items.TEST_INSTANCE_BLOCK, Items.JIGSAW);
+
+        // 1.21.40 inherits 1.21.50
+        Map<Item, Item> fallbacks1_21_40 = new HashMap<>(fallbacks1_21_50);
+        fallbacks1_21_40.put(Items.PALE_OAK_PLANKS, Items.BIRCH_PLANKS);
+        fallbacks1_21_40.put(Items.PALE_OAK_FENCE, Items.BIRCH_FENCE);
+        fallbacks1_21_40.put(Items.PALE_OAK_FENCE_GATE, Items.BIRCH_FENCE_GATE);
+        fallbacks1_21_40.put(Items.PALE_OAK_STAIRS, Items.BIRCH_STAIRS);
+        fallbacks1_21_40.put(Items.PALE_OAK_DOOR, Items.BIRCH_DOOR);
+        fallbacks1_21_40.put(Items.PALE_OAK_TRAPDOOR, Items.BIRCH_TRAPDOOR);
+        fallbacks1_21_40.put(Items.PALE_OAK_SLAB, Items.BIRCH_SLAB);
+        fallbacks1_21_40.put(Items.PALE_OAK_LOG, Items.BIRCH_LOG);
+        fallbacks1_21_40.put(Items.STRIPPED_PALE_OAK_LOG, Items.STRIPPED_BIRCH_LOG);
+        fallbacks1_21_40.put(Items.PALE_OAK_WOOD, Items.BIRCH_WOOD);
+        fallbacks1_21_40.put(Items.PALE_OAK_LEAVES, Items.BIRCH_LEAVES);
+        fallbacks1_21_40.put(Items.PALE_OAK_SAPLING, Items.BIRCH_SAPLING);
+        fallbacks1_21_40.put(Items.STRIPPED_PALE_OAK_WOOD, Items.STRIPPED_BIRCH_WOOD);
+        fallbacks1_21_40.put(Items.PALE_OAK_SIGN, Items.BIRCH_SIGN);
+        fallbacks1_21_40.put(Items.PALE_OAK_HANGING_SIGN, Items.BIRCH_HANGING_SIGN);
+        fallbacks1_21_40.put(Items.PALE_OAK_BOAT, Items.BIRCH_BOAT);
+        fallbacks1_21_40.put(Items.PALE_OAK_CHEST_BOAT, Items.BIRCH_CHEST_BOAT);
+        fallbacks1_21_40.put(Items.PALE_OAK_BUTTON, Items.BIRCH_BUTTON);
+        fallbacks1_21_40.put(Items.PALE_OAK_PRESSURE_PLATE, Items.BIRCH_PRESSURE_PLATE);
+        fallbacks1_21_40.put(Items.RESIN_CLUMP, Items.RAW_COPPER);
+        fallbacks1_21_40.put(Items.RESIN_BRICK_WALL, Items.RED_SANDSTONE_WALL);
+        fallbacks1_21_40.put(Items.RESIN_BRICK_STAIRS, Items.RED_SANDSTONE_STAIRS);
+        fallbacks1_21_40.put(Items.RESIN_BRICK_SLAB, Items.RED_SANDSTONE_SLAB);
+        fallbacks1_21_40.put(Items.RESIN_BLOCK, Items.RED_SANDSTONE);
+        fallbacks1_21_40.put(Items.RESIN_BRICK, Items.BRICK);
+        fallbacks1_21_40.put(Items.RESIN_BRICKS, Items.CUT_RED_SANDSTONE);
+        fallbacks1_21_40.put(Items.CHISELED_RESIN_BRICKS, Items.CHISELED_RED_SANDSTONE);
+        fallbacks1_21_40.put(Items.CLOSED_EYEBLOSSOM, Items.WHITE_TULIP);
+        fallbacks1_21_40.put(Items.OPEN_EYEBLOSSOM, Items.OXEYE_DAISY);
+        fallbacks1_21_40.put(Items.PALE_MOSS_BLOCK, Items.MOSS_BLOCK);
+        fallbacks1_21_40.put(Items.PALE_MOSS_CARPET, Items.MOSS_CARPET);
+        fallbacks1_21_40.put(Items.PALE_HANGING_MOSS, Items.HANGING_ROOTS);
+        fallbacks1_21_40.put(Items.CREAKING_HEART, Items.CHISELED_POLISHED_BLACKSTONE);
+        fallbacks1_21_40.put(Items.CREAKING_SPAWN_EGG, Items.HOGLIN_SPAWN_EGG);
+
+        // Register fallback maps by protocol version
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v800.CODEC.getProtocolVersion(), fallbacks1_21_80);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v786.CODEC.getProtocolVersion(), fallbacks1_21_70);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v776.CODEC.getProtocolVersion(), fallbacks1_21_60);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v766.CODEC.getProtocolVersion(), fallbacks1_21_50);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v748.CODEC.getProtocolVersion(), fallbacks1_21_40);
+    }
+
+    /**
+     * Returns the item fallback map for the given protocol version.
+     *
+     * @param protocolVersion protocol version number
+     * @return fallback mapping for items, or an empty map if none exist
+     */
+    public static Map<Item, Item> getFallbacks(int protocolVersion) {
+        return FALLBACKS_BY_PROTOCOL.getOrDefault(protocolVersion, Collections.emptyMap());
+    }
+
+    public static void populate() {
         List<PaletteVersion> paletteVersions = new ArrayList<>();
-        paletteVersions.add(new PaletteVersion("1_21_50", Bedrock_v766.CODEC.getProtocolVersion(), itemFallbacks, (item, mapping) -> mapping));
-        paletteVersions.add(new PaletteVersion("1_21_60", Bedrock_v776.CODEC.getProtocolVersion(), itemFallbacks, (item, mapping) -> mapping));
-        paletteVersions.add(new PaletteVersion("1_21_70", Bedrock_v786.CODEC.getProtocolVersion(), itemFallbacks));
-        paletteVersions.add(new PaletteVersion("1_21_80", Bedrock_v800.CODEC.getProtocolVersion(), fallbacks1_21_80));
+        paletteVersions.add(new PaletteVersion("1_21_40", Bedrock_v748.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v748.CODEC.getProtocolVersion()), (item, mapping) -> mapping));
+        paletteVersions.add(new PaletteVersion("1_21_50", Bedrock_v766.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v766.CODEC.getProtocolVersion()), (item, mapping) -> mapping));
+        paletteVersions.add(new PaletteVersion("1_21_60", Bedrock_v776.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v776.CODEC.getProtocolVersion()), (item, mapping) -> mapping));
+        paletteVersions.add(new PaletteVersion("1_21_70", Bedrock_v786.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v786.CODEC.getProtocolVersion())));
+        paletteVersions.add(new PaletteVersion("1_21_80", Bedrock_v800.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v800.CODEC.getProtocolVersion())));
         paletteVersions.add(new PaletteVersion("1_21_90", Bedrock_v818.CODEC.getProtocolVersion(), Map.of(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP)));
         paletteVersions.add(new PaletteVersion("1_21_93", Bedrock_v819.CODEC.getProtocolVersion()));
         paletteVersions.add(new PaletteVersion("1_21_100", Bedrock_v827.CODEC.getProtocolVersion()));

@@ -129,6 +129,7 @@ public class GeyserSessionAdapter extends SessionAdapter {
             // Connected directly to the server
             geyser.getLogger().info(GeyserLocale.getLocaleStringLog("geyser.network.remote.connect_internal",
                 session.bedrockUsername(), session.getProtocol().getProfile().getName()));
+            geyser.getLogger().info("Protocol Version: " + session.getProtocol().getCodec().getProtocolVersion());
         } else {
             // Connected to an IP address
             geyser.getLogger().info(GeyserLocale.getLocaleStringLog("geyser.network.remote.connect",

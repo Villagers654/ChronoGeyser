@@ -78,6 +78,10 @@ public class BoatEntity extends Entity implements Leashable, Tickable {
         super(session, entityId, geyserId, uuid, definition, position.add(0d, definition.offset(), 0d), motion, yaw + 90, 0, yaw + 90);
         this.variant = variant;
 
+        if (variant == BoatVariant.PALE_OAK && GameProtocol.isPreWinterDrop(session)) {
+            variant = BoatVariant.BIRCH;
+        }
+
         dirtyMetadata.put(EntityDataTypes.VARIANT, variant.ordinal());
 
         // Required to be able to move on land 1.16.200+ or apply gravity not in the water 1.16.100+

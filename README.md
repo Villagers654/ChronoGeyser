@@ -12,9 +12,6 @@ While Geyser focuses on the latest versions of Bedrock, ChronoGeyser extends sup
 ChronoGeyser is a proxy that lets **Minecraft: Bedrock Edition** players join **Minecraft: Java Edition** servers.
 Unlike upstream Geyser, which only supports the most recent Bedrock releases, ChronoGeyser **bridges the gap across time** by adding backwards compatibility for older Bedrock clients.
 
-* 🔹 Current support: **Bedrock 1.21.50 – 1.21.100**
-* 🔮 Roadmap: Extend backwards to **1.17.10+**
-
 This makes ChronoGeyser especially valuable for players and server communities who want to keep older Bedrock clients playable without being forced to use closed source Nukkit projects.
 
 Special thanks go to:
@@ -28,7 +25,7 @@ Special thanks go to:
 
 * **Bedrock Edition**:
 
-  * ✅ Current: **1.21.50 – 1.21.100**
+  * ✅ Current: **1.21.40 – 1.21.100**
   * 🚧 Planned: **1.17.10 and above**
 
 * **Java Edition**: Matches the versions supported by Geyser, [ViaVersion](https://github.com/ViaVersion/ViaVersion) can be used to extend Java support.
