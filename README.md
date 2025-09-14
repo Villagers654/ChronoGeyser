@@ -71,7 +71,7 @@ Some features cannot be implemented due to fundamental differences between versi
 1. Clone the repo:
 
    ```bash
-   git clone https://github.com/ChronoGeyser/ChronoGeyser.git
+   git clone https://github.com/Villagers654/ChronoGeyser.git
    ```
 2. Initialize submodules:
 
