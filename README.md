@@ -1,52 +1,105 @@
-<img src="https://geysermc.org/img/geyser-1760-860.png" alt="Geyser" width="600"/>
+# ChronoGeyser
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Discord](https://img.shields.io/discord/613163671870242838.svg?color=%237289da&label=discord)](https://discord.gg/geysermc)
-[![Crowdin](https://badges.crowdin.net/e/51361b7f8a01644a238d0fe8f3bddc62/localized.svg)](https://translate.geysermc.org/)
 
-Geyser is a bridge between Minecraft: Bedrock Edition and Minecraft: Java Edition, closing the gap from those wanting to play true cross-platform.
+**ChronoGeyser** is a **fork of [Geyser](https://geysermc.org/)** - the popular proxy that enables cross-play between Minecraft: Bedrock Edition and Java Edition.
+While Geyser focuses on the latest versions of Bedrock, ChronoGeyser extends support to **legacy Bedrock versions**, giving players on older clients the ability to connect to modern Java servers.
 
-Geyser is an open collaboration project by [CubeCraft Games](https://cubecraft.net).
+---
 
-## What is Geyser?
-Geyser is a proxy, bridging the gap between Minecraft: Bedrock Edition and Minecraft: Java Edition servers.
-The ultimate goal of this project is to allow Minecraft: Bedrock Edition users to join Minecraft: Java Edition servers as seamlessly as possible. However, due to the nature of Geyser translating packets over the network of two different games, *do not expect everything to work perfectly!*
+## What is ChronoGeyser?
 
-Special thanks to the DragonProxy project for being a trailblazer in protocol translation and for all the team members who have joined us here!
+ChronoGeyser is a proxy that lets **Minecraft: Bedrock Edition** players join **Minecraft: Java Edition** servers.
+Unlike upstream Geyser, which only supports the most recent Bedrock releases, ChronoGeyser **bridges the gap across time** by adding backwards compatibility for older Bedrock clients.
+
+* 🔹 Current support: **Bedrock 1.21.50 – 1.21.100**
+* 🔮 Roadmap: Extend backwards to **1.17.10+**
+
+This makes ChronoGeyser especially valuable for players and server communities who want to keep older Bedrock clients playable without being forced to use closed source Nukkit projects.
+
+Special thanks go to:
+
+* [GeyserMC](https://geysermc.org/) for the original project
+* [DragonProxy](https://github.com/DragonetMC/DragonProxy) for pioneering early protocol translation work
+
+---
 
 ## Supported Versions
-Geyser is currently supporting Minecraft Bedrock 1.21.70 - 1.21.101 and Minecraft Java 1.21.7 - 1.21.8. For more information, please see [here](https://geysermc.org/wiki/geyser/supported-versions/).
+
+* **Bedrock Edition**:
+
+  * ✅ Current: **1.21.50 – 1.21.100**
+  * 🚧 Planned: **1.17.10 and above**
+
+* **Java Edition**: Matches the versions supported by Geyser, [ViaVersion](https://github.com/ViaVersion/ViaVersion) can be used to extend Java support.
+
+---
 
 ## Setting Up
-Take a look [here](https://geysermc.org/wiki/geyser/setup/) for how to set up Geyser.
 
-## Links:
-- Website: https://geysermc.org
-- Docs: https://geysermc.org/wiki/geyser/
-- Download: https://geysermc.org/download
-- Discord: https://discord.gg/geysermc
-- Donate: https://opencollective.com/geysermc
-- Test Server: `test.geysermc.org` port `25565` for Java and `19132` for Bedrock
+ChronoGeyser setup is identical to Geyser’s, it should be a drop-in replacement. You can see their setup guide [here](https://geysermc.org/wiki/geyser/setup/)
 
-## What's Left to be Added/Fixed
-- Near-perfect movement (to the point where anticheat on large servers is unlikely to ban you)
-- Some Entity Flags
+---
 
-## What can't be fixed
-There are a few things Geyser is unable to support due to various differences between Minecraft Bedrock and Java. For a list of these limitations, see the [Current Limitations](https://geysermc.org/wiki/geyser/current-limitations/) page.
+## Links
+
+* Docs: *Coming soon*
+* Download: [Releases](https://github.com/Villagers654/ChronoGeyser/releases)
+* Discord: *Coming soon*
+* Donate: *Coming soon*
+* Test Server: *Coming soon*
+
+---
+
+## Goals and Roadmap
+
+* Expand stable support for **Bedrock 1.17.10 → latest**
+* Keep upstream Geyser features and compatibility
+* Smooth out movement, combat, and entity sync across different Bedrock generations
+* Preserve playability for older Bedrock clients on modern Java servers
+
+---
+
+## Known Limitations
+
+Some features cannot be implemented due to fundamental differences between versions of the game, such as dried ghasts in version 1.21.70 and older.
+
+---
 
 ## Compiling
-1. Clone the repo to your computer
-2. Navigate to the Geyser root directory and run `git submodule update --init --recursive`. This command downloads all the needed submodules for Geyser and is a crucial step in this process.
-3. Run `gradlew build` and locate to `bootstrap/build` folder.
+
+1. Clone the repo:
+
+   ```bash
+   git clone https://github.com/ChronoGeyser/ChronoGeyser.git
+   ```
+2. Initialize submodules:
+
+   ```bash
+   git submodule update --init --recursive
+   ```
+3. Build with Gradle:
+
+   ```bash
+   ./gradlew build
+   ```
+4. Artifacts will appear in `bootstrap/build`.
+
+---
 
 ## Contributing
-Any contributions are appreciated. Please feel free to reach out to us on [Discord](https://discord.gg/geysermc) if
-you're interested in helping out with Geyser.
 
-## Libraries Used:
-- [Adventure Text Library](https://github.com/KyoriPowered/adventure)
-- [CloudburstMC Bedrock Protocol Library](https://github.com/CloudburstMC/Protocol)
-- [GeyserMC's Java Protocol Library](https://github.com/GeyserMC/MCProtocolLib)
-- [TerminalConsoleAppender](https://github.com/Minecrell/TerminalConsoleAppender)
-- [Simple Logging Facade for Java (slf4j)](https://github.com/qos-ch/slf4j)
+ChronoGeyser is a **community project** - contributions are welcome!
+Whether you’re interested in coding, testing legacy versions, or improving documentation, we’d love your help.
+
+---
+
+## Libraries Used
+
+ChronoGeyser inherits its libraries from upstream:
+
+* [Adventure Text Library](https://github.com/KyoriPowered/adventure)
+* [CloudburstMC Bedrock Protocol Library](https://github.com/CloudburstMC/Protocol)
+* [MCProtocolLib](https://github.com/GeyserMC/MCProtocolLib)
+* [TerminalConsoleAppender](https://github.com/Minecrell/TerminalConsoleAppender)
+* [SLF4J](https://github.com/qos-ch/slf4j)
