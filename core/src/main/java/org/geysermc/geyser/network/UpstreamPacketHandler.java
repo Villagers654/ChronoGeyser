@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2019-2022 GeyserMC. http://geysermc.org
+ * Copyright (c) 2019-2025 GeyserMC. http://geysermc.org
+ * Copyright (c) 2025 ChronoGeyser Contributors. https://github.com/Villagers654/ChronoGeyser
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,8 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @author GeyserMC
- * @link https://github.com/GeyserMC/Geyser
+ * @author ChronoGeyser Contributors
+ * @link https://github.com/Villagers654/ChronoGeyser
  */
 
 package org.geysermc.geyser.network;
@@ -144,6 +145,10 @@ public class UpstreamPacketHandler extends LoggingPacketHandler {
             } else {
                 throw new IllegalStateException("Default codec of protocol version " + protocolVersion + " should have been found");
             }
+        }
+
+        if (GameProtocol.isPre1_21_0(session)) {
+            session.getPlayerEntity().resetAir();
         }
 
         session.getUpstream().getSession().setCodec(packetCodec);

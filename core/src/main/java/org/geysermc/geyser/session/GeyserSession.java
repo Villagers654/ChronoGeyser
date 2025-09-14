@@ -2415,8 +2415,9 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
 
     @Override
     public void closeForm() {
-        sendUpstreamPacket(new ClientboundCloseFormPacket());
-    }
+        if (!GameProtocol.isPre1_21_2(this)) {
+            sendUpstreamPacket(new ClientboundCloseFormPacket());
+        }    }
 
     public void addCommandEnum(String name, String enums) {
         softEnumPacket(name, SoftEnumUpdateType.ADD, enums);

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2019-2022 GeyserMC. http://geysermc.org
+ * Copyright (c) 2019-2025 GeyserMC. http://geysermc.org
+ * Copyright (c) 2025 ChronoGeyser Contributors. https://github.com/Villagers654/ChronoGeyser
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,8 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @author GeyserMC
- * @link https://github.com/GeyserMC/Geyser
+ * @author ChronoGeyser Contributors
+ * @link https://github.com/Villagers654/ChronoGeyser
  */
 
 package org.geysermc.geyser.entity.type.player;
@@ -45,10 +46,12 @@ import org.geysermc.geyser.entity.type.Entity;
 import org.geysermc.geyser.entity.type.LivingEntity;
 import org.geysermc.geyser.inventory.GeyserItemStack;
 import org.geysermc.geyser.item.Items;
+import org.geysermc.geyser.level.BedrockDimension;
 import org.geysermc.geyser.level.block.Blocks;
 import org.geysermc.geyser.level.block.property.Properties;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.block.type.TrapDoorBlock;
+import org.geysermc.geyser.network.GameProtocol;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.session.cache.tags.BlockTag;
 import org.geysermc.geyser.util.AttributeUtils;
@@ -110,6 +113,15 @@ public class SessionPlayerEntity extends PlayerEntity {
     private int vehicleJumpStrength;
 
     private int lastAirSupply = getMaxAir();
+
+    /**
+     * Determines if our position is currently out-of-sync with the Java server
+     * due to our workaround for the void floor
+     * <p>
+     * Must be reset when dying, switching worlds, or being teleported out of the void
+     */
+    @Getter @Setter
+    private boolean voidPositionDesynched;
 
     @Getter @Setter
     private boolean insideScaffolding = false;
@@ -300,7 +312,12 @@ public class SessionPlayerEntity extends PlayerEntity {
         // the bubbles visually pop
         setFlag(EntityFlag.BREATHING, amount >= this.lastAirSupply);
         this.lastAirSupply = amount;
-        super.setAirSupply(amount);
+
+        if (amount == getMaxAir() && GameProtocol.isPre1_21_0(session)) {
+            super.setAirSupply(0); // Hide the bubble counter from the UI for the player
+        } else {
+            super.setAirSupply(amount);
+        }
     }
 
     @Override
@@ -553,5 +570,49 @@ public class SessionPlayerEntity extends PlayerEntity {
 
     public boolean isGliding() {
         return getFlag(EntityFlag.GLIDING);
+    }
+
+    private boolean isBelowVoidFloor() {
+        return position.getY() < voidFloorPosition();
+    }
+
+    public int voidFloorPosition() {
+        // The void floor is offset about 40 blocks below the bottom of the world
+        BedrockDimension bedrockDimension = session.getBedrockDimension();
+        return bedrockDimension.minY() - 40;
+    }
+
+    /**
+     * This method handles teleporting the player below or above the Bedrock void floor.
+     * The Java server should never see this desync as we adjust the position that we send to it
+     *
+     * @param up in which direction to teleport - true to resync our position, or false to be
+     *           teleported below the void floor.
+     */
+    public void teleportVoidFloorFix(boolean up) {
+        // Safety to avoid double teleports
+        if ((voidPositionDesynched && !up) || (!voidPositionDesynched && up)) {
+            return;
+        }
+
+        // Work around there being a floor at the bottom of the world and teleport the player below it
+        // Moving from below to above the void floor works fine
+        Vector3f newPosition = this.getPosition();
+        if (up) {
+            newPosition = newPosition.up(4f);
+            voidPositionDesynched = false;
+        } else {
+            newPosition = newPosition.down(4f);
+            voidPositionDesynched = true;
+        }
+
+        this.setPositionManual(newPosition);
+        MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
+        movePlayerPacket.setRuntimeEntityId(geyserId);
+        movePlayerPacket.setPosition(newPosition);
+        movePlayerPacket.setRotation(getBedrockRotation());
+        movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
+        movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.BEHAVIOR);
+        session.sendUpstreamPacketImmediately(movePlayerPacket);
     }
 }

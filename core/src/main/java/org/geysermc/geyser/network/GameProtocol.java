@@ -30,6 +30,11 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.cloudburstmc.protocol.bedrock.codec.BedrockCodec;
+import org.cloudburstmc.protocol.bedrock.codec.v671.Bedrock_v671;
+import org.cloudburstmc.protocol.bedrock.codec.v685.Bedrock_v685;
+import org.cloudburstmc.protocol.bedrock.codec.v686.Bedrock_v686;
+import org.cloudburstmc.protocol.bedrock.codec.v712.Bedrock_v712;
+import org.cloudburstmc.protocol.bedrock.codec.v729.Bedrock_v729;
 import org.cloudburstmc.protocol.bedrock.codec.v748.Bedrock_v748;
 import org.cloudburstmc.protocol.bedrock.codec.v766.Bedrock_v766;
 import org.cloudburstmc.protocol.bedrock.codec.v776.Bedrock_v776;
@@ -86,6 +91,22 @@ public final class GameProtocol {
      */
     private static final PacketCodec DEFAULT_JAVA_CODEC = MinecraftCodec.CODEC;
 
+    public static boolean isPre1_21_0(GeyserSession session) {
+        return session.getUpstream().getProtocolVersion() < Bedrock_v685.CODEC.getProtocolVersion();
+    }
+
+    public static boolean isPre1_21_2(GeyserSession session) {
+        return session.getUpstream().getProtocolVersion() < Bedrock_v686.CODEC.getProtocolVersion();
+    }
+
+    public static boolean isPre1_21_30(GeyserSession session) {
+        return session.getUpstream().getProtocolVersion() < Bedrock_v729.CODEC.getProtocolVersion();
+    }
+
+    public static boolean isPre1_21_40(GeyserSession session) {
+        return session.getUpstream().getProtocolVersion() < Bedrock_v748.CODEC.getProtocolVersion();
+    }
+
     public static boolean isPreWinterDrop(GeyserSession session) {
         return session.getUpstream().getProtocolVersion() <= Bedrock_v748.CODEC.getProtocolVersion();
     }
@@ -100,6 +121,11 @@ public final class GameProtocol {
 
     static {
         // Strict ordering
+        register(Bedrock_v671.CODEC, "1.20.80/1.20.81");
+        register(Bedrock_v685.CODEC, "1.21.0/1.21.1");
+        register(Bedrock_v686.CODEC, "1.21.2/1.21.3");
+        register(Bedrock_v712.CODEC, "1.21.20 - 1.21.23");
+        register(Bedrock_v729.CODEC, "1.21.30/1.21.31");
         register(Bedrock_v748.CODEC, "1.21.40 - 1.21.44");
         register(Bedrock_v766.CODEC, "1.21.50 - 1.21.51");
         register(Bedrock_v776.CODEC, "1.21.60 - 1.21.62");

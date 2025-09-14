@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2019-2022 GeyserMC. http://geysermc.org
+ * Copyright (c) 2019-2025 GeyserMC. http://geysermc.org
+ * Copyright (c) 2025 ChronoGeyser Contributors. https://github.com/Villagers654/ChronoGeyser
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,8 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @author GeyserMC
- * @link https://github.com/GeyserMC/Geyser
+ * @author ChronoGeyser Contributors
+ * @link https://github.com/Villagers654/ChronoGeyser
  */
 
 package org.geysermc.geyser.translator.protocol.java.entity;
@@ -30,6 +31,7 @@ import org.geysermc.geyser.entity.type.LivingEntity;
 import org.geysermc.geyser.entity.type.player.PlayerEntity;
 import org.geysermc.geyser.inventory.GeyserItemStack;
 import org.geysermc.geyser.item.Items;
+import org.geysermc.geyser.network.GameProtocol;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.skin.FakeHeadProvider;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
@@ -78,7 +80,11 @@ public class JavaSetEquipmentTranslator extends PacketTranslator<ClientboundSetE
                 case BODY -> {
                     // BODY is sent for llamas with a carpet equipped, as of 1.20.5
                     // and for wolves
-                    livingEntity.setBody(stack);
+                    if (GameProtocol.isPre1_21_2(session)) {
+                        livingEntity.setChestplate(stack);
+                    } else {
+                        livingEntity.setBody(stack);
+                    }
                     armorUpdated = true;
                 }
                 case LEGGINGS -> {
