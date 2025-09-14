@@ -71,6 +71,7 @@ public class ItemMappings implements DefinitionRegistry<ItemDefinition> {
 
     List<ItemDefinition> buckets;
     List<ItemDefinition> boats;
+    List<ItemDefinition> componentItemData;
     Int2ObjectMap<String> customIdMappings;
 
     Object2ObjectMap<CustomBlockData, ItemDefinition> customBlockItemDefinitions;

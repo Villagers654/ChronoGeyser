@@ -29,6 +29,8 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.cloudburstmc.protocol.bedrock.codec.BedrockCodec;
+import org.cloudburstmc.protocol.bedrock.codec.v766.Bedrock_v766;
+import org.cloudburstmc.protocol.bedrock.codec.v776.Bedrock_v776;
 import org.cloudburstmc.protocol.bedrock.codec.v786.Bedrock_v786;
 import org.cloudburstmc.protocol.bedrock.codec.v800.Bedrock_v800;
 import org.cloudburstmc.protocol.bedrock.codec.v818.Bedrock_v818;
@@ -82,8 +84,18 @@ public final class GameProtocol {
      */
     private static final PacketCodec DEFAULT_JAVA_CODEC = MinecraftCodec.CODEC;
 
+    public static boolean isPreCreativeInventoryRewrite(int protocolVersion) {
+        return protocolVersion < 776;
+    }
+
+    public static boolean is1_21_70orHigher(GeyserSession session) {
+        return session.protocolVersion() >= Bedrock_v786.CODEC.getProtocolVersion();
+    }
+
     static {
         // Strict ordering
+        register(Bedrock_v766.CODEC, "1.21.50 - 1.21.51");
+        register(Bedrock_v776.CODEC, "1.21.60 - 1.21.62");
         register(Bedrock_v786.CODEC, "1.21.70", "1.21.71", "1.21.72", "1.21.73");
         register(Bedrock_v800.CODEC, "1.21.80", "1.21.81", "1.21.82", "1.21.83", "1.21.84");
         register(Bedrock_v818.CODEC, "1.21.90", "1.21.91", "1.21.92");
