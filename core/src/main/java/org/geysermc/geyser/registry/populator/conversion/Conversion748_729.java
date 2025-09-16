@@ -52,6 +52,7 @@ public class Conversion748_729 {
     );
 
     public static GeyserMappingItem remapItem(Item item, GeyserMappingItem mapping) {
+        mapping = Conversion766_748.remapItem(item, mapping);
         String identifier = mapping.getBedrockIdentifier();
 
         if (NEW_PLAYER_HEADS.containsKey(identifier)) {

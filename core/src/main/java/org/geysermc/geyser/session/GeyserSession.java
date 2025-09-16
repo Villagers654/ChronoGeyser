@@ -854,12 +854,24 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         }
 
         AvailableEntityIdentifiersPacket entityPacket = new AvailableEntityIdentifiersPacket();
-        entityPacket.setIdentifiers(Registries.BEDROCK_ENTITY_IDENTIFIERS.get());
+        if (GameProtocol.isPre1_21_40(this)) {
+            entityPacket.setIdentifiers(Registries.BEDROCK_ENTITY_IDENTIFIERS.get());
+
+            NbtMap nbt = Registries.BEDROCK_ENTITY_IDENTIFIERS.get();
+
+            Object idListValue = nbt.remove("entries");
+
+            if (idListValue != null) {
+                nbt.put("idlist", idListValue);
+            }
+        } else {
+            entityPacket.setIdentifiers(Registries.BEDROCK_ENTITY_IDENTIFIERS.get());
+        }
         upstream.sendPacket(entityPacket);
 
         CameraPresetsPacket cameraPresetsPacket = new CameraPresetsPacket();
         cameraPresetsPacket.getPresets().addAll(CameraDefinitions.CAMERA_PRESETS);
-        upstream.sendPacket(cameraPresetsPacket);
+        //upstream.sendPacket(cameraPresetsPacket);
 
         CreativeContentPacket creativePacket = new CreativeContentPacket();
         creativePacket.getContents().addAll(this.itemMappings.getCreativeItems());
@@ -1828,7 +1840,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         // Server authorative block breaking results in the client always sending
         // positions for block breaking actions, which is easier to validate
         // It does *not* mean we can dictate the break speed server-sided :(
-        startGamePacket.setServerAuthoritativeBlockBreaking(true);
+        startGamePacket.setServerAuthoritativeBlockBreaking(false);
 
         startGamePacket.setServerId("");
         startGamePacket.setWorldId("");

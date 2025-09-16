@@ -27,7 +27,9 @@
 package org.geysermc.geyser.registry.populator.conversion;
 
 import org.cloudburstmc.nbt.NbtMap;
+import org.geysermc.geyser.item.type.Item;
 import org.geysermc.geyser.level.block.Blocks;
+import org.geysermc.geyser.registry.type.GeyserMappingItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +87,36 @@ public class Conversion766_748 {
         ).forEach(block -> OTHER_NEW_BLOCKS.add(block.javaIdentifier().value()));
 
         OTHER_NEW_BLOCKS.add("resin_brick_double_slab");
+    }
+
+    public static GeyserMappingItem remapItem(Item item, GeyserMappingItem mapping) {
+        String identifier = mapping.getBedrockIdentifier().replace("minecraft:", "");
+        if (PALE_WOODEN_BLOCKS.contains(identifier)) {
+            return mapping.withBedrockIdentifier("minecraft:" + identifier.replace("pale_oak", "birch"));
+        }
+
+        if (OTHER_NEW_BLOCKS.contains(identifier)) {
+            return switch (identifier) {
+                case "resin_brick_double_slab" -> mapping.withBedrockIdentifier("minecraft:red_sandstone_double_slab");
+                case "pale_moss_block" -> mapping.withBedrockIdentifier("minecraft:moss_block");
+                case "pale_moss_carpet" -> mapping.withBedrockIdentifier("minecraft:moss_carpet");
+                case "pale_hanging_moss" -> mapping.withBedrockIdentifier("minecraft:hanging_roots");
+                case "open_eyeblossom" -> mapping.withBedrockIdentifier("minecraft:oxeye_daisy");
+                case "closed_eyeblossom" -> mapping.withBedrockIdentifier("minecraft:white_tulip");
+                case "resin_clump" -> mapping.withBedrockIdentifier("minecraft:raw_copper");
+                case "resin_block" -> mapping.withBedrockIdentifier("minecraft:red_sandstone");
+                case "resin_bricks" -> mapping.withBedrockIdentifier("minecraft:cut_red_sandstone");
+                case "resin_brick_stairs" -> mapping.withBedrockIdentifier("minecraft:red_sandstone_stairs");
+                case "resin_brick_slab" -> mapping.withBedrockIdentifier("minecraft:red_sandstone_slab");
+                case "resin_brick_wall" -> mapping.withBedrockIdentifier("minecraft:red_sandstone_wall");
+                case "chiseled_resin_bricks" -> mapping.withBedrockIdentifier("minecraft:chiseled_red_sandstone");
+                case "creaking_heart" -> mapping.withBedrockIdentifier("minecraft:chiseled_polished_blackstone");
+                case "resin_brick" -> mapping.withBedrockIdentifier("minecraft:brick");
+                default -> throw new IllegalStateException("missing replacement for new item! " + identifier);
+            };
+        }
+
+        return mapping;
     }
 
     public static NbtMap remapBlock(NbtMap tag) {

@@ -87,6 +87,7 @@ import org.geysermc.geyser.registry.populator.conversion.Conversion685_671;
 import org.geysermc.geyser.registry.populator.conversion.Conversion712_685;
 import org.geysermc.geyser.registry.populator.conversion.Conversion729_712;
 import org.geysermc.geyser.registry.populator.conversion.Conversion748_729;
+import org.geysermc.geyser.registry.populator.conversion.Conversion766_748;
 import org.geysermc.geyser.registry.type.BlockMappings;
 import org.geysermc.geyser.registry.type.GeyserBedrockBlock;
 import org.geysermc.geyser.registry.type.GeyserMappingItem;
@@ -211,23 +212,12 @@ public class ItemRegistryPopulator {
         fallbacks1_21_40.put(Items.CREAKING_HEART, Items.CHISELED_POLISHED_BLACKSTONE);
         fallbacks1_21_40.put(Items.CREAKING_SPAWN_EGG, Items.HOGLIN_SPAWN_EGG);
 
-        // 1.21.30
-        List<Item> bundles = List.of(Items.BUNDLE, Items.BLACK_BUNDLE, Items.BLUE_BUNDLE, Items.BROWN_BUNDLE, Items.CYAN_BUNDLE, Items.GRAY_BUNDLE,
-            Items.GREEN_BUNDLE, Items.LIGHT_BLUE_BUNDLE, Items.LIGHT_GRAY_BUNDLE, Items.LIME_BUNDLE, Items.MAGENTA_BUNDLE, Items.ORANGE_BUNDLE, Items.RED_BUNDLE,
-            Items.PINK_BUNDLE, Items.PURPLE_BUNDLE, Items.WHITE_BUNDLE, Items.YELLOW_BUNDLE);
-        Map<Item, Item> fallbacks1_21_30 = new HashMap<>(fallbacks1_21_40);
-        bundles.forEach(bundle -> fallbacks1_21_30.put(bundle, Items.SHULKER_SHELL));
-
         // Register fallback maps by protocol version
         FALLBACKS_BY_PROTOCOL.put(Bedrock_v800.CODEC.getProtocolVersion(), fallbacks1_21_80);
         FALLBACKS_BY_PROTOCOL.put(Bedrock_v786.CODEC.getProtocolVersion(), fallbacks1_21_70);
         FALLBACKS_BY_PROTOCOL.put(Bedrock_v776.CODEC.getProtocolVersion(), fallbacks1_21_60);
         FALLBACKS_BY_PROTOCOL.put(Bedrock_v766.CODEC.getProtocolVersion(), fallbacks1_21_50);
         FALLBACKS_BY_PROTOCOL.put(Bedrock_v748.CODEC.getProtocolVersion(), fallbacks1_21_40);
-        FALLBACKS_BY_PROTOCOL.put(Bedrock_v729.CODEC.getProtocolVersion(), fallbacks1_21_30);
-        FALLBACKS_BY_PROTOCOL.put(Bedrock_v712.CODEC.getProtocolVersion(), fallbacks1_21_30);
-        FALLBACKS_BY_PROTOCOL.put(Bedrock_v685.CODEC.getProtocolVersion(), fallbacks1_21_30);
-        FALLBACKS_BY_PROTOCOL.put(Bedrock_v671.CODEC.getProtocolVersion(), fallbacks1_21_30);
     }
 
     /**
@@ -241,27 +231,18 @@ public class ItemRegistryPopulator {
     }
 
     public static void populate() {
+        List<Item> bundles = List.of(Items.BUNDLE, Items.BLACK_BUNDLE, Items.BLUE_BUNDLE, Items.BROWN_BUNDLE, Items.CYAN_BUNDLE, Items.GRAY_BUNDLE,
+            Items.GREEN_BUNDLE, Items.LIGHT_BLUE_BUNDLE, Items.LIGHT_GRAY_BUNDLE, Items.LIME_BUNDLE, Items.MAGENTA_BUNDLE, Items.ORANGE_BUNDLE, Items.RED_BUNDLE,
+            Items.PINK_BUNDLE, Items.PURPLE_BUNDLE, Items.WHITE_BUNDLE, Items.YELLOW_BUNDLE);
+        Map<Item, Item> pre1_21_2Items = new HashMap<>(FALLBACKS_BY_PROTOCOL.get(748));
+        bundles.forEach(bundle -> pre1_21_2Items.put(bundle, Items.SHULKER_SHELL));
+
         List<PaletteVersion> paletteVersions = new ArrayList<>();
-        paletteVersions.add(new PaletteVersion("1_20_80", Bedrock_v671.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v671.CODEC.getProtocolVersion()),
-            (item, mapping) -> {
-                mapping = Conversion748_729.remapItem(item, mapping);
-                mapping = Conversion729_712.remapItem(item, mapping);
-                mapping = Conversion712_685.remapItem(item, mapping);
-                return Conversion685_671.remapItem(item, mapping);
-            }));
-        paletteVersions.add(new PaletteVersion("1_21_0", Bedrock_v685.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v685.CODEC.getProtocolVersion()),
-            (item, mapping) -> {
-                mapping = Conversion748_729.remapItem(item, mapping);
-                mapping = Conversion729_712.remapItem(item, mapping);
-                return Conversion712_685.remapItem(item, mapping);
-            }));
-        paletteVersions.add(new PaletteVersion("1_21_20", Bedrock_v712.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v712.CODEC.getProtocolVersion()),
-            (item, mapping) -> {
-                mapping = Conversion748_729.remapItem(item, mapping);
-                return Conversion729_712.remapItem(item, mapping);
-            }));
-        paletteVersions.add(new PaletteVersion("1_21_30", Bedrock_v729.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v729.CODEC.getProtocolVersion()), Conversion748_729::remapItem));
-        paletteVersions.add(new PaletteVersion("1_21_40", Bedrock_v748.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v748.CODEC.getProtocolVersion())));
+        paletteVersions.add(new PaletteVersion("1_20_80", Bedrock_v671.CODEC.getProtocolVersion(), pre1_21_2Items, Conversion685_671::remapItem));
+        paletteVersions.add(new PaletteVersion("1_21_0", Bedrock_v685.CODEC.getProtocolVersion(), pre1_21_2Items, Conversion712_685::remapItem));
+        paletteVersions.add(new PaletteVersion("1_21_20", Bedrock_v712.CODEC.getProtocolVersion(), pre1_21_2Items, Conversion729_712::remapItem));
+        paletteVersions.add(new PaletteVersion("1_21_30", Bedrock_v729.CODEC.getProtocolVersion(), pre1_21_2Items, Conversion748_729::remapItem));
+        paletteVersions.add(new PaletteVersion("1_21_40", Bedrock_v748.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v748.CODEC.getProtocolVersion()), Conversion766_748::remapItem));
         paletteVersions.add(new PaletteVersion("1_21_50", Bedrock_v766.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v766.CODEC.getProtocolVersion())));
         paletteVersions.add(new PaletteVersion("1_21_60", Bedrock_v776.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v776.CODEC.getProtocolVersion())));
         paletteVersions.add(new PaletteVersion("1_21_70", Bedrock_v786.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v786.CODEC.getProtocolVersion())));
@@ -388,7 +369,7 @@ public class ItemRegistryPopulator {
             });
 
             List<CreativeItemGroup> creativeItemGroups;
-            if (GameProtocol.isPreCreativeInventoryRewrite(palette.protocolVersion)) {
+            if (palette.protocolVersion < 776) {
                 creativeItemGroups = new ArrayList<>();
             } else {
                 creativeItemGroups = CreativeItemRegistryPopulator.readCreativeItemGroups(palette, creativeItems);

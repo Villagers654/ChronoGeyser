@@ -1,29 +1,3 @@
-/*
- * Copyright (c) 2019-2025 GeyserMC. http://geysermc.org
- * Copyright (c) 2025 ChronoGeyser Contributors. https://github.com/Villagers654/ChronoGeyser
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @author ChronoGeyser Contributors
- * @link https://github.com/Villagers654/ChronoGeyser
- */
-
 package org.geysermc.geyser.registry.populator.conversion;
 
 import org.cloudburstmc.nbt.NbtMap;
@@ -58,6 +32,7 @@ public class Conversion712_685 {
     private static final List<String> NEW_BLOCKS = Stream.of(NEW_STONE_BLOCK_SLABS_2, NEW_STONE_BLOCK_SLABS_3, NEW_STONE_BLOCK_SLABS_4, NEW_DOUBLE_STONE_BLOCK_SLABS, NEW_DOUBLE_STONE_BLOCK_SLABS_2, NEW_DOUBLE_STONE_BLOCK_SLABS_3, NEW_DOUBLE_STONE_BLOCK_SLABS_4, NEW_PRISMARINE_BLOCKS, NEW_CORAL_FAN_HANGS, NEW_CORAL_FAN_HANGS_2, NEW_CORAL_FAN_HANGS_3, NEW_MONSTER_EGGS, NEW_STONEBRICK_BLOCKS, NEW_LIGHT_BLOCKS, NEW_SANDSTONE_BLOCKS, NEW_QUARTZ_BLOCKS, NEW_RED_SANDSTONE_BLOCKS, NEW_SAND_BLOCKS, NEW_DIRT_BLOCKS, NEW_ANVILS, NEW_YELLOW_FLOWERS).flatMap(List::stream).toList();
 
     public static GeyserMappingItem remapItem(Item item, GeyserMappingItem mapping) {
+        mapping = Conversion729_712.remapItem(item, mapping);
         String identifier = mapping.getBedrockIdentifier();
 
         if (!NEW_BLOCKS.contains(identifier)) {
@@ -181,19 +156,19 @@ public class Conversion712_685 {
     public static NbtMap remapBlock(NbtMap tag) {
         tag = Conversion729_712.remapBlock(tag);
 
-        final String updatedName = tag.getString("name");
+        final String name = tag.getString("name");
 
-        if (!NEW_BLOCKS.contains(updatedName)) {
+        if (!NEW_BLOCKS.contains(name)) {
             return tag;
         }
 
         String replacement;
 
-        if (NEW_DOUBLE_STONE_BLOCK_SLABS.contains(updatedName)) {
+        if (NEW_DOUBLE_STONE_BLOCK_SLABS.contains(name)) {
             replacement = "minecraft:double_stone_block_slab";
             String stoneSlabType;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:quartz_double_slab" -> stoneSlabType = "quartz";
                 case "minecraft:petrified_oak_double_slab" -> stoneSlabType = "wood";
                 case "minecraft:stone_brick_double_slab" -> stoneSlabType = "stone_brick";
@@ -202,7 +177,7 @@ public class Conversion712_685 {
                 case "minecraft:nether_brick_double_slab" -> stoneSlabType = "nether_brick";
                 case "minecraft:cobblestone_double_slab" -> stoneSlabType = "cobblestone";
                 case "minecraft:smooth_stone_double_slab" -> stoneSlabType = "smooth_stone";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -213,11 +188,11 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_STONE_BLOCK_SLABS_2.contains(updatedName) || NEW_DOUBLE_STONE_BLOCK_SLABS_2.contains(updatedName)) {
-            replacement = NEW_STONE_BLOCK_SLABS_2.contains(updatedName) ? "minecraft:stone_block_slab2" : "minecraft:double_stone_block_slab2";
+        if (NEW_STONE_BLOCK_SLABS_2.contains(name) || NEW_DOUBLE_STONE_BLOCK_SLABS_2.contains(name)) {
+            replacement = NEW_STONE_BLOCK_SLABS_2.contains(name) ? "minecraft:stone_block_slab2" : "minecraft:double_stone_block_slab2";
             String stoneSlabType2;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:prismarine_slab", "minecraft:prismarine_double_slab" -> stoneSlabType2 = "prismarine_rough";
                 case "minecraft:dark_prismarine_slab", "minecraft:dark_prismarine_double_slab" -> stoneSlabType2 = "prismarine_dark";
                 case "minecraft:smooth_sandstone_slab", "minecraft:smooth_sandstone_double_slab" -> stoneSlabType2 = "smooth_sandstone";
@@ -226,7 +201,7 @@ public class Conversion712_685 {
                 case "minecraft:prismarine_brick_slab", "minecraft:prismarine_brick_double_slab" -> stoneSlabType2 = "prismarine_brick";
                 case "minecraft:mossy_cobblestone_slab", "minecraft:mossy_cobblestone_double_slab" -> stoneSlabType2 = "mossy_cobblestone";
                 case "minecraft:red_sandstone_slab", "minecraft:red_sandstone_double_slab" -> stoneSlabType2 = "red_sandstone";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -237,11 +212,11 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_STONE_BLOCK_SLABS_3.contains(updatedName) || NEW_DOUBLE_STONE_BLOCK_SLABS_3.contains(updatedName)) {
-            replacement = NEW_STONE_BLOCK_SLABS_3.contains(updatedName) ? "minecraft:stone_block_slab3" : "minecraft:double_stone_block_slab3";
+        if (NEW_STONE_BLOCK_SLABS_3.contains(name) || NEW_DOUBLE_STONE_BLOCK_SLABS_3.contains(name)) {
+            replacement = NEW_STONE_BLOCK_SLABS_3.contains(name) ? "minecraft:stone_block_slab3" : "minecraft:double_stone_block_slab3";
             String stoneSlabType3;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:smooth_red_sandstone_slab", "minecraft:smooth_red_sandstone_double_slab" -> stoneSlabType3 = "smooth_red_sandstone";
                 case "minecraft:polished_granite_slab", "minecraft:polished_granite_double_slab" -> stoneSlabType3 = "polished_granite";
                 case "minecraft:granite_slab", "minecraft:granite_double_slab" -> stoneSlabType3 = "granite";
@@ -250,7 +225,7 @@ public class Conversion712_685 {
                 case "minecraft:polished_andesite_slab", "minecraft:polished_andesite_double_slab" -> stoneSlabType3 = "polished_andesite";
                 case "minecraft:diorite_slab", "minecraft:diorite_double_slab" -> stoneSlabType3 = "diorite";
                 case "minecraft:end_stone_brick_slab", "minecraft:end_stone_brick_double_slab" -> stoneSlabType3 = "end_stone_brick";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -261,17 +236,17 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_STONE_BLOCK_SLABS_4.contains(updatedName) || NEW_DOUBLE_STONE_BLOCK_SLABS_4.contains(updatedName)) {
-            replacement = NEW_STONE_BLOCK_SLABS_4.contains(updatedName) ? "minecraft:stone_block_slab4" : "minecraft:double_stone_block_slab4";
+        if (NEW_STONE_BLOCK_SLABS_4.contains(name) || NEW_DOUBLE_STONE_BLOCK_SLABS_4.contains(name)) {
+            replacement = NEW_STONE_BLOCK_SLABS_4.contains(name) ? "minecraft:stone_block_slab4" : "minecraft:double_stone_block_slab4";
             String stoneSlabType4;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:smooth_quartz_slab", "minecraft:smooth_quartz_double_slab" -> stoneSlabType4 = "smooth_quartz";
                 case "minecraft:cut_sandstone_slab", "minecraft:cut_sandstone_double_slab" -> stoneSlabType4 = "cut_sandstone";
                 case "minecraft:cut_red_sandstone_slab", "minecraft:cut_red_sandstone_double_slab" -> stoneSlabType4 = "cut_red_sandstone";
                 case "minecraft:normal_stone_slab", "minecraft:normal_stone_double_slab" -> stoneSlabType4 = "stone";
                 case "minecraft:mossy_stone_brick_slab", "minecraft:mossy_stone_brick_double_slab" -> stoneSlabType4 = "mossy_stone_brick";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -282,15 +257,15 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_PRISMARINE_BLOCKS.contains(updatedName)) {
+        if (NEW_PRISMARINE_BLOCKS.contains(name)) {
             replacement = "minecraft:prismarine";
             String prismarineBlockType;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:prismarine_bricks" -> prismarineBlockType = "bricks";
                 case "minecraft:dark_prismarine" -> prismarineBlockType = "dark";
                 case "minecraft:prismarine" -> prismarineBlockType = "default";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -301,10 +276,10 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_CORAL_FAN_HANGS.contains(updatedName) || NEW_CORAL_FAN_HANGS_2.contains(updatedName) || NEW_CORAL_FAN_HANGS_3.contains(updatedName)) {
-            replacement = NEW_CORAL_FAN_HANGS.contains(updatedName) ? "minecraft:coral_fan_hang" : NEW_CORAL_FAN_HANGS_2.contains(updatedName) ? "minecraft:coral_fan_hang2" : "minecraft:coral_fan_hang3";
-            boolean deadBit = updatedName.startsWith("minecraft:dead_");
-            boolean coralHangTypeBit = updatedName.contains("brain") || updatedName.contains("fire");
+        if (NEW_CORAL_FAN_HANGS.contains(name) || NEW_CORAL_FAN_HANGS_2.contains(name) || NEW_CORAL_FAN_HANGS_3.contains(name)) {
+            replacement = NEW_CORAL_FAN_HANGS.contains(name) ? "minecraft:coral_fan_hang" : NEW_CORAL_FAN_HANGS_2.contains(name) ? "minecraft:coral_fan_hang2" : "minecraft:coral_fan_hang3";
+            boolean deadBit = name.startsWith("minecraft:dead_");
+            boolean coralHangTypeBit = name.contains("brain") || name.contains("fire");
 
             NbtMap states = tag.getCompound("states")
                 .toBuilder()
@@ -315,18 +290,18 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_MONSTER_EGGS.contains(updatedName)) {
+        if (NEW_MONSTER_EGGS.contains(name)) {
             replacement = "minecraft:monster_egg";
             String monsterEggStoneType;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:infested_cobblestone" -> monsterEggStoneType = "cobblestone";
                 case "minecraft:infested_stone_bricks" -> monsterEggStoneType = "stone_brick";
                 case "minecraft:infested_mossy_stone_bricks" -> monsterEggStoneType = "mossy_stone_brick";
                 case "minecraft:infested_cracked_stone_bricks" -> monsterEggStoneType = "cracked_stone_brick";
                 case "minecraft:infested_chiseled_stone_bricks" -> monsterEggStoneType = "chiseled_stone_brick";
                 case "minecraft:infested_stone" -> monsterEggStoneType = "stone";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -337,17 +312,17 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_STONEBRICK_BLOCKS.contains(updatedName)) {
+        if (NEW_STONEBRICK_BLOCKS.contains(name)) {
             replacement = "minecraft:stonebrick";
             String stoneBrickType;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:mossy_stone_bricks" -> stoneBrickType = "mossy";
                 case "minecraft:cracked_stone_bricks" -> stoneBrickType = "cracked";
                 case "minecraft:chiseled_stone_bricks" -> stoneBrickType = "chiseled";
                 case "minecraft:smooth_stone_bricks" -> stoneBrickType = "smooth";
                 case "minecraft:stone_bricks" -> stoneBrickType = "default";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -358,9 +333,9 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_LIGHT_BLOCKS.contains(updatedName)) {
+        if (NEW_LIGHT_BLOCKS.contains(name)) {
             replacement = "minecraft:light_block";
-            int blockLightLevel = Integer.parseInt(updatedName.split("_")[2]);
+            int blockLightLevel = Integer.parseInt(name.split("_")[2]);
 
             NbtMap states = tag.getCompound("states")
                 .toBuilder()
@@ -370,16 +345,16 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_SANDSTONE_BLOCKS.contains(updatedName) || NEW_RED_SANDSTONE_BLOCKS.contains(updatedName)) {
-            replacement = NEW_SANDSTONE_BLOCKS.contains(updatedName) ? "minecraft:sandstone" : "minecraft:red_sandstone";
+        if (NEW_SANDSTONE_BLOCKS.contains(name) || NEW_RED_SANDSTONE_BLOCKS.contains(name)) {
+            replacement = NEW_SANDSTONE_BLOCKS.contains(name) ? "minecraft:sandstone" : "minecraft:red_sandstone";
             String sandStoneType;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:cut_sandstone", "minecraft:cut_red_sandstone" -> sandStoneType = "cut";
                 case "minecraft:chiseled_sandstone", "minecraft:chiseled_red_sandstone" -> sandStoneType = "heiroglyphs";
                 case "minecraft:smooth_sandstone", "minecraft:smooth_red_sandstone" -> sandStoneType = "smooth";
                 case "minecraft:sandstone", "minecraft:red_sandstone" -> sandStoneType = "default";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -390,16 +365,16 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_QUARTZ_BLOCKS.contains(updatedName)) {
+        if (NEW_QUARTZ_BLOCKS.contains(name)) {
             replacement = "minecraft:quartz_block";
             String chiselType;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:chiseled_quartz_block" -> chiselType = "chiseled";
                 case "minecraft:quartz_pillar" -> chiselType = "lines";
                 case "minecraft:smooth_quartz" -> chiselType = "smooth";
                 case "minecraft:quartz_block" -> chiselType = "default";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -410,9 +385,9 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_SAND_BLOCKS.contains(updatedName)) {
+        if (NEW_SAND_BLOCKS.contains(name)) {
             replacement = "minecraft:sand";
-            String sandType = updatedName.equals("minecraft:red_sand") ? "red" : "normal";
+            String sandType = name.equals("minecraft:red_sand") ? "red" : "normal";
 
             NbtMap states = tag.getCompound("states")
                 .toBuilder()
@@ -422,9 +397,9 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_DIRT_BLOCKS.contains(updatedName)) {
+        if (NEW_DIRT_BLOCKS.contains(name)) {
             replacement = "minecraft:dirt";
-            String dirtType = updatedName.equals("minecraft:coarse_dirt") ? "coarse" : "normal";
+            String dirtType = name.equals("minecraft:coarse_dirt") ? "coarse" : "normal";
 
             NbtMap states = tag.getCompound("states")
                 .toBuilder()
@@ -434,16 +409,16 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_ANVILS.contains(updatedName)) {
+        if (NEW_ANVILS.contains(name)) {
             replacement = "minecraft:anvil";
             String damage;
 
-            switch (updatedName) {
+            switch (name) {
                 case "minecraft:damaged_anvil" -> damage = "broken";
                 case "minecraft:chipped_anvil" -> damage = "slightly_damaged";
                 case "minecraft:deprecated_anvil" -> damage = "very_damaged";
                 case "minecraft:anvil" -> damage = "undamaged";
-                default -> throw new IllegalStateException("Unexpected value: " + updatedName);
+                default -> throw new IllegalStateException("Unexpected value: " + name);
             }
 
             NbtMap states = tag.getCompound("states")
@@ -454,7 +429,7 @@ public class Conversion712_685 {
             return tag.toBuilder().putString("name", replacement).putCompound("states", states).build();
         }
 
-        if (NEW_YELLOW_FLOWERS.contains(updatedName)) {
+        if (NEW_YELLOW_FLOWERS.contains(name)) {
             replacement = "minecraft:yellow_flower";
             return tag.toBuilder().putString("name", replacement).build();
         }

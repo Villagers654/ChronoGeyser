@@ -107,7 +107,7 @@ public class JavaUpdateRecipesTranslator extends PacketTranslator<ClientboundUpd
             TrimDataPacket trimDataPacket = new TrimDataPacket();
             trimDataPacket.getPatterns().addAll(session.getRegistryCache().registry(JavaRegistries.TRIM_PATTERN).values()); // TODO this is wrong!! See the TODOs in the registry readers
             trimDataPacket.getMaterials().addAll(session.getRegistryCache().registry(JavaRegistries.TRIM_MATERIAL).values());
-            session.sendUpstreamPacket(trimDataPacket);
+            //session.sendUpstreamPacket(trimDataPacket);
 
             // Identical smithing_trim recipe sent by BDS that uses tag-descriptors, as the client seems to ignore the
             // approach of using many default-descriptors (which we do for smithing_transform)
