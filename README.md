@@ -1,3 +1,5 @@
+# ChonoGeyser is *experimental* DO NOT USE in production 
+
 # ChronoGeyser
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
