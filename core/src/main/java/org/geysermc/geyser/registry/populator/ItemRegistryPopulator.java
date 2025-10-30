@@ -325,11 +325,6 @@ public class ItemRegistryPopulator {
         paletteVersions.add(new PaletteVersion("1_21_60", Bedrock_v776.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v776.CODEC.getProtocolVersion())));
         paletteVersions.add(new PaletteVersion("1_21_70", Bedrock_v786.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v786.CODEC.getProtocolVersion())));
         paletteVersions.add(new PaletteVersion("1_21_80", Bedrock_v800.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v800.CODEC.getProtocolVersion())));
-        paletteVersions.add(new PaletteVersion("1_21_90", Bedrock_v818.CODEC.getProtocolVersion(), Map.of(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP)));
-        paletteVersions.add(new PaletteVersion("1_21_93", Bedrock_v819.CODEC.getProtocolVersion()));
-        paletteVersions.add(new PaletteVersion("1_21_100", Bedrock_v827.CODEC.getProtocolVersion()));
-        // Keep the historical explicit maps for these older versions, but format them consistently
-        // (these local maps were created above in the static initializer, so pass them here via getFallbacks when appropriate)
         paletteVersions.add(new PaletteVersion("1_21_90", Bedrock_v818.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v818.CODEC.getProtocolVersion()), Conversion844_827::remapItem));
         paletteVersions.add(new PaletteVersion("1_21_93", Bedrock_v819.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v819.CODEC.getProtocolVersion()), Conversion844_827::remapItem));
         paletteVersions.add(new PaletteVersion("1_21_100", Bedrock_v827.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v827.CODEC.getProtocolVersion()), Conversion844_827::remapItem));
