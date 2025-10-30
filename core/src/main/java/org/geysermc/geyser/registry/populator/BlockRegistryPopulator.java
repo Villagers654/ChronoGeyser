@@ -34,6 +34,7 @@ import com.google.common.collect.Interners;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -56,6 +57,8 @@ import org.cloudburstmc.protocol.bedrock.codec.v800.Bedrock_v800;
 import org.cloudburstmc.protocol.bedrock.codec.v818.Bedrock_v818;
 import org.cloudburstmc.protocol.bedrock.codec.v819.Bedrock_v819;
 import org.cloudburstmc.protocol.bedrock.codec.v827.Bedrock_v827;
+import org.cloudburstmc.protocol.bedrock.codec.v844.Bedrock_v844;
+import org.cloudburstmc.protocol.bedrock.codec.v859.Bedrock_v859;
 import org.cloudburstmc.protocol.bedrock.data.BlockPropertyData;
 import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.geysermc.geyser.GeyserImpl;
@@ -68,6 +71,8 @@ import org.geysermc.geyser.level.block.type.Block;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.block.type.FlowerPotBlock;
 import org.geysermc.geyser.registry.BlockRegistries;
+import org.geysermc.geyser.registry.populator.conversion.Conversion827_819;
+import org.geysermc.geyser.registry.populator.conversion.Conversion844_827;
 import org.geysermc.geyser.registry.populator.conversion.Conversion685_671;
 import org.geysermc.geyser.registry.populator.conversion.Conversion712_685;
 import org.geysermc.geyser.registry.populator.conversion.Conversion729_712;
@@ -78,7 +83,6 @@ import org.geysermc.geyser.registry.populator.conversion.Conversion786_776;
 import org.geysermc.geyser.registry.populator.conversion.Conversion800_786;
 import org.geysermc.geyser.registry.type.BlockMappings;
 import org.geysermc.geyser.registry.type.GeyserBedrockBlock;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.InputStream;
@@ -148,6 +152,11 @@ public final class BlockRegistryPopulator {
             .put(ObjectIntPair.of("1_21_90", Bedrock_v818.CODEC.getProtocolVersion()), tag -> tag)
             .put(ObjectIntPair.of("1_21_90", Bedrock_v819.CODEC.getProtocolVersion()), tag -> tag)
             .put(ObjectIntPair.of("1_21_100", Bedrock_v827.CODEC.getProtocolVersion()), tag -> tag)
+                .put(ObjectIntPair.of("1_21_90", Bedrock_v818.CODEC.getProtocolVersion()), Conversion827_819::remapBlock)
+                .put(ObjectIntPair.of("1_21_90", Bedrock_v819.CODEC.getProtocolVersion()), Conversion827_819::remapBlock)
+                .put(ObjectIntPair.of("1_21_100", Bedrock_v827.CODEC.getProtocolVersion()), Conversion844_827::remapBlock)
+                .put(ObjectIntPair.of("1_21_110", Bedrock_v844.CODEC.getProtocolVersion()), tag -> tag)
+                .put(ObjectIntPair.of("1_21_110", Bedrock_v859.CODEC.getProtocolVersion()), tag -> tag)
             .build();
 
         // We can keep this strong as nothing should be garbage collected
@@ -160,7 +169,7 @@ public final class BlockRegistryPopulator {
             List<NbtMap> vanillaBlockStates;
             List<NbtMap> blockStates;
             try (InputStream stream = GeyserImpl.getInstance().getBootstrap().getResourceOrThrow(String.format("bedrock/block_palette.%s.nbt", palette.key()));
-                 NBTInputStream nbtInputStream = new NBTInputStream(new DataInputStream(new GZIPInputStream(stream)), true, true)) {
+                NBTInputStream nbtInputStream = new NBTInputStream(new DataInputStream(new GZIPInputStream(stream)), true, true)) {
                 NbtMap blockPalette = (NbtMap) nbtInputStream.readTag();
 
                 vanillaBlockStates = new ArrayList<>(blockPalette.getList("blocks", NbtType.COMPOUND));
@@ -257,14 +266,14 @@ public final class BlockRegistryPopulator {
 
             // Stream isn't ideal.
             List<Block> javaPottable = BlockRegistries.JAVA_BLOCKS.get()
-                .parallelStream()
-                .flatMap(block -> {
-                    if (block instanceof FlowerPotBlock flowerPot && flowerPot.flower() != Blocks.AIR) {
-                        return Stream.of(flowerPot.flower());
-                    }
-                    return null;
-                })
-                .toList();
+                    .parallelStream()
+                    .flatMap(block -> {
+                        if (block instanceof FlowerPotBlock flowerPot && flowerPot.flower() != Blocks.AIR) {
+                            return Stream.of(flowerPot.flower());
+                        }
+                        return null;
+                    })
+                    .toList();
             Map<Block, NbtMap> flowerPotBlocks = new Object2ObjectOpenHashMap<>();
             Map<NbtMap, BlockDefinition> itemFrames = new Object2ObjectOpenHashMap<>();
             IntArrayList collisionIgnoredBlocks = new IntArrayList();
@@ -338,8 +347,8 @@ public final class BlockRegistryPopulator {
                 }
 
                 boolean waterlogged = blockState.getValue(Properties.WATERLOGGED, false)
-                    || block == Blocks.BUBBLE_COLUMN || block == Blocks.KELP || block == Blocks.KELP_PLANT
-                    || block == Blocks.SEAGRASS || block == Blocks.TALL_SEAGRASS;
+                        || block == Blocks.BUBBLE_COLUMN || block == Blocks.KELP || block == Blocks.KELP_PLANT
+                        || block == Blocks.SEAGRASS || block == Blocks.TALL_SEAGRASS;
 
                 if (waterlogged) {
                     BlockRegistries.WATERLOGGED.get().set(javaRuntimeId);
@@ -426,19 +435,19 @@ public final class BlockRegistryPopulator {
             });
 
             BlockRegistries.BLOCKS.register(palette.valueInt(), builder.bedrockRuntimeMap(bedrockRuntimeMap)
-                .javaToBedrockBlocks(javaToBedrockBlocks)
-                .javaToVanillaBedrockBlocks(javaToVanillaBedrockBlocks)
-                .javaToBedrockIdentifiers(javaToBedrockIdentifiers)
-                .stateDefinitionMap(blockStateOrderedMap)
-                .itemFrames(itemFrames)
-                .flowerPotBlocks(flowerPotBlocks)
-                .jigsawStates(jigsawDefinitions)
-                .structureBlockStates(structureBlockDefinitions)
-                .remappedVanillaIds(remappedVanillaIds)
-                .blockProperties(customBlockProperties)
-                .customBlockStateDefinitions(customBlockStateDefinitions)
-                .extendedCollisionBoxes(extendedCollisionBoxes)
-                .build());
+                    .javaToBedrockBlocks(javaToBedrockBlocks)
+                    .javaToVanillaBedrockBlocks(javaToVanillaBedrockBlocks)
+                    .javaToBedrockIdentifiers(javaToBedrockIdentifiers)
+                    .stateDefinitionMap(blockStateOrderedMap)
+                    .itemFrames(itemFrames)
+                    .flowerPotBlocks(flowerPotBlocks)
+                    .jigsawStates(jigsawDefinitions)
+                    .structureBlockStates(structureBlockDefinitions)
+                    .remappedVanillaIds(remappedVanillaIds)
+                    .blockProperties(customBlockProperties)
+                    .customBlockStateDefinitions(customBlockStateDefinitions)
+                    .extendedCollisionBoxes(extendedCollisionBoxes)
+                    .build());
         }
     }
 
@@ -446,7 +455,7 @@ public final class BlockRegistryPopulator {
         List<NbtMap> blocksNbt;
         try (InputStream stream = GeyserImpl.getInstance().getBootstrap().getResourceOrThrow("mappings/blocks.nbt")) {
             blocksNbt = ((NbtMap) NbtUtils.createGZIPReader(stream).readTag())
-                .getList("bedrock_mappings", NbtType.COMPOUND);
+                    .getList("bedrock_mappings", NbtType.COMPOUND);
         } catch (Exception e) {
             throw new AssertionError("Unable to load Java block mappings", e);
         }

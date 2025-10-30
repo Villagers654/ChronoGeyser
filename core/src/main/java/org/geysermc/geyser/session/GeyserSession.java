@@ -85,7 +85,6 @@ import org.cloudburstmc.protocol.bedrock.packet.BedrockPacket;
 import org.cloudburstmc.protocol.bedrock.packet.BiomeDefinitionListPacket;
 import org.cloudburstmc.protocol.bedrock.packet.CameraPresetsPacket;
 import org.cloudburstmc.protocol.bedrock.packet.ChunkRadiusUpdatedPacket;
-import org.cloudburstmc.protocol.bedrock.packet.ClientboundCloseFormPacket;
 import org.cloudburstmc.protocol.bedrock.packet.CreativeContentPacket;
 import org.cloudburstmc.protocol.bedrock.packet.DimensionDataPacket;
 import org.cloudburstmc.protocol.bedrock.packet.EmoteListPacket;
@@ -115,6 +114,7 @@ import org.geysermc.cumulus.form.util.FormBuilder;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.api.bedrock.camera.CameraData;
 import org.geysermc.geyser.api.bedrock.camera.CameraShake;
+import org.geysermc.geyser.input.InputLocksFlag;
 import org.geysermc.geyser.api.connection.GeyserConnection;
 import org.geysermc.geyser.api.entity.EntityData;
 import org.geysermc.geyser.api.entity.type.GeyserEntity;
@@ -214,6 +214,7 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.player.GameMode;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.player.HandPreference;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.player.PlayerAction;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.player.ResolvableProfile;
 import org.geysermc.mcprotocollib.protocol.data.game.setting.ChatVisibility;
 import org.geysermc.mcprotocollib.protocol.data.game.setting.ParticleStatus;
 import org.geysermc.mcprotocollib.protocol.data.game.setting.SkinPart;
@@ -221,6 +222,7 @@ import org.geysermc.mcprotocollib.protocol.data.game.statistic.CustomStatistic;
 import org.geysermc.mcprotocollib.protocol.data.game.statistic.Statistic;
 import org.geysermc.mcprotocollib.protocol.data.handshake.HandshakeIntent;
 import org.geysermc.mcprotocollib.protocol.packet.common.serverbound.ServerboundClientInformationPacket;
+import org.geysermc.mcprotocollib.protocol.packet.configuration.serverbound.ServerboundAcceptCodeOfConductPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatCommandSignedPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.player.ServerboundPlayerAbilitiesPacket;
@@ -234,6 +236,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -272,6 +275,8 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
      */
     @Setter
     private List<String> certChainData;
+    @Setter
+    private String token;
 
     @NonNull
     @Setter
@@ -399,7 +404,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
      * A map of all players (and their heads) that are wearing a player head with a custom texture.
      * Our workaround for these players is to give them a custom skin and geometry to emulate wearing a custom skull.
      */
-    private final Map<UUID, GameProfile> playerWithCustomHeads = new Object2ObjectOpenHashMap<>();
+    private final Map<UUID, ResolvableProfile> playerWithCustomHeads = new Object2ObjectOpenHashMap<>();
 
     @Setter
     private boolean droppingLecternBook;
@@ -745,6 +750,12 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
     @Setter
     private boolean allowVibrantVisuals = true;
 
+    @Accessors(fluent = true)
+    private boolean hasAcceptedCodeOfConduct = false;
+
+    private final Set<InputLocksFlag> inputLocksSet = EnumSet.noneOf(InputLocksFlag.class);
+    private boolean inputLockDirty;
+
     public GeyserSession(GeyserImpl geyser, BedrockServerSession bedrockServerSession, EventLoop tickEventLoop) {
         this.geyser = geyser;
         this.upstream = new UpstreamSession(bedrockServerSession);
@@ -871,7 +882,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
 
         CameraPresetsPacket cameraPresetsPacket = new CameraPresetsPacket();
         cameraPresetsPacket.getPresets().addAll(CameraDefinitions.CAMERA_PRESETS);
-        //upstream.sendPacket(cameraPresetsPacket);
+        upstream.sendPacket(cameraPresetsPacket);
 
         CreativeContentPacket creativePacket = new CreativeContentPacket();
         creativePacket.getContents().addAll(this.itemMappings.getCreativeItems());
@@ -1469,9 +1480,9 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
             return false;
         }
 
-        if (playerInventoryHolder.inventory().getItemInHand().asItem() == Items.SHIELD) {
+        if (playerInventoryHolder.inventory().getItemInHand().is(Items.SHIELD)) {
             useItem(Hand.MAIN_HAND);
-        } else if (playerInventoryHolder.inventory().getOffhand().asItem() == Items.SHIELD) {
+        } else if (playerInventoryHolder.inventory().getOffhand().is(Items.SHIELD)) {
             useItem(Hand.OFF_HAND);
         } else {
             // No blocking
@@ -1700,19 +1711,58 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
     public boolean sendForm(@NonNull Form form) {
         // First close any dialogs that are open. This won't execute the dialog's closing action.
         dialogManager.close();
-        return doSendForm(form);
+        // Also close all currently open forms.
+        if (formCache.hasFormOpen()) {
+            closeForm();
+        }
+
+        // Cache this form, let's see whether we can open it immediately
+        formCache.addForm(form);
+
+        // Also close current inventories, otherwise the form will not show
+        if (inventoryHolder != null) {
+            // We'll open the form when the client confirms current inventory being closed
+            InventoryUtils.sendJavaContainerClose(inventoryHolder);
+            InventoryUtils.closeInventory(this, inventoryHolder, true);
+        }
+
+        // Open the current form, unless we're in the process of closing another
+        // If we're waiting, the form will be sent when Bedrock confirms closing
+        // If we don't wait, the client rejects the form as it is busy
+        if (!isClosingInventory() && upstream.isInitialized()) {
+            formCache.resendAllForms();
+        }
+
+        return true;
     }
 
     /**
      * Sends a form without first closing any open dialog. This should only be used by {@link org.geysermc.geyser.session.dialog.Dialog}s.
      */
-    public boolean sendDialogForm(@NonNull Form form) {
-        return doSendForm(form);
+    public void sendDialogForm(@NonNull Form form) {
+        doSendForm(form);
     }
 
     private boolean doSendForm(@NonNull Form form) {
         formCache.showForm(form);
         return true;
+    }
+
+    public void acceptCodeOfConduct() {
+        if (hasAcceptedCodeOfConduct) {
+            return;
+        }
+        hasAcceptedCodeOfConduct = true;
+        sendDownstreamConfigurationPacket(ServerboundAcceptCodeOfConductPacket.INSTANCE);
+    }
+
+    public void prepareForConfigurationForm() {
+        if (!sentSpawnPacket) {
+            connect();
+        }
+        // Disable time progression whilst the form is open
+        // Once logged into the game this is set correctly when receiving a time packet from the server
+        setDaylightCycle(false);
     }
 
     public @NonNull PlayerInventory getPlayerInventory() {
@@ -1728,7 +1778,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
 
     @Override
     public boolean sendForm(@NonNull FormBuilder<?, ?, ?> formBuilder) {
-        formCache.showForm(formBuilder.build());
+        sendForm(formBuilder.build());
         return true;
     }
 
@@ -1819,11 +1869,17 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         if (allowVibrantVisuals && !GameProtocol.is1_21_90orHigher(this)) {
             startGamePacket.getExperiments().add(new ExperimentData("experimental_graphics", true));
         }
+
         // Enables 2025 Content Drop 2 features
         if (GameProtocol.is1_21_80(this)) {
             startGamePacket.getExperiments().add(new ExperimentData("y_2025_drop_2", true));
             // Enables the locator bar for 1.21.80 clients
             startGamePacket.getExperiments().add(new ExperimentData("locator_bar", true));
+        }
+
+        // Enable 2025 Content Drop 3 features on 1.21.100
+        if (GameProtocol.is1_21_100(this)) {
+            startGamePacket.getExperiments().add(new ExperimentData("y_2025_drop_3", true));
         }
 
         startGamePacket.setVanillaVersion("*");
@@ -1840,7 +1896,11 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         // Server authorative block breaking results in the client always sending
         // positions for block breaking actions, which is easier to validate
         // It does *not* mean we can dictate the break speed server-sided :(
-        startGamePacket.setServerAuthoritativeBlockBreaking(false);
+        startGamePacket.setServerAuthoritativeBlockBreaking(true);
+
+        if (playerEntity.getPropertyManager() != null) {
+            startGamePacket.setPlayerPropertyData(playerEntity.getPropertyManager().toNbtMap("minecraft:player"));
+        }
 
         startGamePacket.setServerId("");
         startGamePacket.setWorldId("");
@@ -1917,6 +1977,10 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
      */
     public void sendDownstreamGamePacket(Packet packet) {
         sendDownstreamPacket(packet, ProtocolState.GAME);
+    }
+
+    public void sendDownstreamConfigurationPacket(Packet packet) {
+        sendDownstreamPacket(packet, ProtocolState.CONFIGURATION);
     }
 
     /**
@@ -2297,11 +2361,17 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
 
     @Override
     public @NonNull String version() {
+        if (clientData == null) {
+            return "unknown";
+        }
         return clientData.getGameVersion();
     }
 
     @Override
     public @NonNull BedrockPlatform platform() {
+        if (clientData == null) {
+            return BedrockPlatform.UNKNOWN;
+        }
         return BedrockPlatform.values()[clientData.getDeviceOs().ordinal()]; //todo
     }
 
@@ -2350,23 +2420,31 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         entities().showEmote(emoter, emoteId);
     }
 
-    public void lockInputs(boolean camera, boolean movement) {
+    public void setLockInput(InputLocksFlag flag, boolean value) {
+        this.inputLockDirty |= value ? this.inputLocksSet.add(flag) : this.inputLocksSet.remove(flag);
+    }
+
+    public void updateInputLocks() {
+        if (!this.inputLockDirty) {
+            return;
+        }
+        this.inputLockDirty = false;
+
         UpdateClientInputLocksPacket packet = new UpdateClientInputLocksPacket();
-        final int cameraOffset = 1 << 1;
-        final int movementOffset = 1 << 2;
 
         int result = 0;
-        if (camera) {
-            result |= cameraOffset;
-        }
-        if (movement) {
-            result |= movementOffset;
+        for (InputLocksFlag other : this.inputLocksSet) {
+            result |= other.getOffset();
         }
 
         packet.setLockComponentData(result);
         packet.setServerPosition(this.playerEntity.getPosition());
 
         sendUpstreamPacket(packet);
+    }
+
+    public boolean getLockedInput(InputLocksFlag flag) {
+        return this.inputLocksSet.contains(flag);
     }
 
     @Override
@@ -2427,9 +2505,12 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
 
     @Override
     public void closeForm() {
+        formCache.closeForms();
+
         if (!GameProtocol.isPre1_21_2(this)) {
             sendUpstreamPacket(new ClientboundCloseFormPacket());
-        }    }
+        }
+    }
 
     public void addCommandEnum(String name, String enums) {
         softEnumPacket(name, SoftEnumUpdateType.ADD, enums);
@@ -2448,5 +2529,9 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         packet.setType(type);
         packet.setSoftEnum(new CommandEnumData(name, Collections.singletonMap(enums, Collections.emptySet()), true));
         sendUpstreamPacket(packet);
+    }
+
+    public String getDebugInfo() {
+        return "Username: %s, DeviceOs: %s, Version: %s".formatted(bedrockUsername(), platform(), version());
     }
 }

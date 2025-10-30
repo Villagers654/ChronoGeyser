@@ -80,7 +80,7 @@ public final class BlockUtils {
 
         for (ToolData.Rule rule : tool.getRules()) {
             if (rule.getCorrectForDrops() != null) {
-                if (session.getTagCache().isBlock(rule.getBlocks(), block)) {
+                if (block.is(session, rule.getBlocks())) {
                     return rule.getCorrectForDrops();
                 }
             }
@@ -97,7 +97,7 @@ public final class BlockUtils {
 
         for (ToolData.Rule rule : tool.getRules()) {
             if (rule.getSpeed() != null) {
-                if (session.getTagCache().isBlock(rule.getBlocks(), block)) {
+                if (block.is(session, rule.getBlocks())) {
                     return rule.getSpeed();
                 }
             }
@@ -259,7 +259,7 @@ public final class BlockUtils {
     }
 
     public static boolean blockMatchesPredicate(GeyserSession session, BlockState state, AdventureModePredicate.BlockPredicate predicate) {
-        if (predicate.getBlocks() != null && !session.getTagCache().isBlock(predicate.getBlocks(), state.block())) {
+        if (predicate.getBlocks() != null && !state.block().is(session, predicate.getBlocks())) {
             return false;
         } else if (predicate.getProperties() != null) {
             List<AdventureModePredicate.PropertyMatcher> matchers = predicate.getProperties();

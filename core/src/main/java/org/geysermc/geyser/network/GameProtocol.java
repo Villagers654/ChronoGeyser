@@ -43,6 +43,8 @@ import org.cloudburstmc.protocol.bedrock.codec.v800.Bedrock_v800;
 import org.cloudburstmc.protocol.bedrock.codec.v818.Bedrock_v818;
 import org.cloudburstmc.protocol.bedrock.codec.v819.Bedrock_v819;
 import org.cloudburstmc.protocol.bedrock.codec.v827.Bedrock_v827;
+import org.cloudburstmc.protocol.bedrock.codec.v844.Bedrock_v844;
+import org.cloudburstmc.protocol.bedrock.codec.v859.Bedrock_v859;
 import org.cloudburstmc.protocol.bedrock.netty.codec.packet.BedrockPacketCodec;
 import org.geysermc.geyser.api.util.MinecraftVersion;
 import org.geysermc.geyser.impl.MinecraftVersionImpl;
@@ -134,6 +136,8 @@ public final class GameProtocol {
         register(Bedrock_v818.CODEC, "1.21.90", "1.21.91", "1.21.92");
         register(Bedrock_v819.CODEC, "1.21.93", "1.21.94");
         register(Bedrock_v827.CODEC, "1.21.100", "1.21.101");
+        register(Bedrock_v844.CODEC, "1.21.111", "1.21.112", "1.21.113", "1.21.114");
+        register(Bedrock_v859.CODEC, "1.21.120");
 
         MinecraftVersion latestBedrock = SUPPORTED_BEDROCK_VERSIONS.get(SUPPORTED_BEDROCK_VERSIONS.size() - 1);
         DEFAULT_BEDROCK_VERSION = latestBedrock.versionString();
@@ -185,20 +189,16 @@ public final class GameProtocol {
 
     /* Bedrock convenience methods to gatekeep features and easily remove the check on version removal */
 
-    public static boolean isTheOneVersionWithBrokenForms(GeyserSession session) {
-        return session.protocolVersion() == Bedrock_v786.CODEC.getProtocolVersion();
+    public static boolean is1_21_100(GeyserSession session) {
+        return session.protocolVersion() == Bedrock_v827.CODEC.getProtocolVersion();
     }
 
-    public static boolean is1_21_80orHigher(GeyserSession session) {
-        return session.protocolVersion() >= Bedrock_v800.CODEC.getProtocolVersion();
+    public static boolean is1_21_110orHigher(GeyserSession session) {
+        return is1_21_110orHigher(session.protocolVersion());
     }
 
-    public static boolean is1_21_90orHigher(GeyserSession session) {
-        return session.protocolVersion() >= Bedrock_v818.CODEC.getProtocolVersion();
-    }
-
-    public static boolean is1_21_80(GeyserSession session) {
-        return session.protocolVersion() == Bedrock_v800.CODEC.getProtocolVersion();
+    public static boolean is1_21_110orHigher(int protocolVersion) {
+        return protocolVersion >= Bedrock_v844.CODEC.getProtocolVersion();
     }
 
     /**
@@ -207,7 +207,7 @@ public final class GameProtocol {
      * @return the supported Minecraft: Java Edition version names
      */
     public static List<String> getJavaVersions() {
-        return List.of(DEFAULT_JAVA_CODEC.getMinecraftVersion(), "1.21.8");
+        return List.of(DEFAULT_JAVA_CODEC.getMinecraftVersion());
     }
 
     /**
@@ -225,7 +225,7 @@ public final class GameProtocol {
      * @return the supported Minecraft: Java Edition version
      */
     public static String getJavaMinecraftVersion() {
-        return "1.21.8";
+        return "1.21.10";
     }
 
     /**

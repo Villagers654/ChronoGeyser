@@ -58,6 +58,8 @@ import org.cloudburstmc.protocol.bedrock.codec.v800.Bedrock_v800;
 import org.cloudburstmc.protocol.bedrock.codec.v818.Bedrock_v818;
 import org.cloudburstmc.protocol.bedrock.codec.v819.Bedrock_v819;
 import org.cloudburstmc.protocol.bedrock.codec.v827.Bedrock_v827;
+import org.cloudburstmc.protocol.bedrock.codec.v844.Bedrock_v844;
+import org.cloudburstmc.protocol.bedrock.codec.v859.Bedrock_v859;
 import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.data.definitions.ItemDefinition;
 import org.cloudburstmc.protocol.bedrock.data.definitions.SimpleItemDefinition;
@@ -88,6 +90,7 @@ import org.geysermc.geyser.registry.populator.conversion.Conversion712_685;
 import org.geysermc.geyser.registry.populator.conversion.Conversion729_712;
 import org.geysermc.geyser.registry.populator.conversion.Conversion748_729;
 import org.geysermc.geyser.registry.populator.conversion.Conversion766_748;
+import org.geysermc.geyser.registry.populator.conversion.Conversion844_827;
 import org.geysermc.geyser.registry.type.BlockMappings;
 import org.geysermc.geyser.registry.type.GeyserBedrockBlock;
 import org.geysermc.geyser.registry.type.GeyserMappingItem;
@@ -121,6 +124,10 @@ public class ItemRegistryPopulator {
         public PaletteVersion(String version, int protocolVersion, Map<Item, Item> javaOnlyItems) {
             this(version, protocolVersion, javaOnlyItems, (item, mapping) -> mapping);
         }
+
+        public PaletteVersion(String version, int protocolVersion, Remapper remapper) {
+            this(version, protocolVersion, Collections.emptyMap(), remapper);
+        }
     }
 
     @FunctionalInterface
@@ -130,12 +137,82 @@ public class ItemRegistryPopulator {
     }
 
     private static final Map<Integer, Map<Item, Item>> FALLBACKS_BY_PROTOCOL = new HashMap<>();
+    public static void populate() {
+        Map<Item, Item> eightTwoSevenFallbacks = new HashMap<>();
+        eightTwoSevenFallbacks.put(Items.ACACIA_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.BAMBOO_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.BIRCH_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.CHERRY_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.CRIMSON_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.DARK_OAK_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.JUNGLE_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.MANGROVE_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.OAK_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.PALE_OAK_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.SPRUCE_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.WARPED_SHELF, Items.CHISELED_BOOKSHELF);
+        eightTwoSevenFallbacks.put(Items.COPPER_BARS, Items.IRON_BARS);
+        eightTwoSevenFallbacks.put(Items.EXPOSED_COPPER_BARS, Items.IRON_BARS);
+        eightTwoSevenFallbacks.put(Items.WEATHERED_COPPER_BARS, Items.IRON_BARS);
+        eightTwoSevenFallbacks.put(Items.OXIDIZED_COPPER_BARS, Items.IRON_BARS);
+        eightTwoSevenFallbacks.put(Items.WAXED_COPPER_BARS, Items.IRON_BARS);
+        eightTwoSevenFallbacks.put(Items.WAXED_EXPOSED_COPPER_BARS, Items.IRON_BARS);
+        eightTwoSevenFallbacks.put(Items.WAXED_WEATHERED_COPPER_BARS, Items.IRON_BARS);
+        eightTwoSevenFallbacks.put(Items.WAXED_OXIDIZED_COPPER_BARS, Items.IRON_BARS);
+        eightTwoSevenFallbacks.put(Items.COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        eightTwoSevenFallbacks.put(Items.EXPOSED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        eightTwoSevenFallbacks.put(Items.WEATHERED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        eightTwoSevenFallbacks.put(Items.OXIDIZED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        eightTwoSevenFallbacks.put(Items.WAXED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        eightTwoSevenFallbacks.put(Items.WAXED_EXPOSED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        eightTwoSevenFallbacks.put(Items.WAXED_WEATHERED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        eightTwoSevenFallbacks.put(Items.WAXED_OXIDIZED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        eightTwoSevenFallbacks.put(Items.COPPER_LANTERN, Items.LANTERN);
+        eightTwoSevenFallbacks.put(Items.EXPOSED_COPPER_LANTERN, Items.LANTERN);
+        eightTwoSevenFallbacks.put(Items.WEATHERED_COPPER_LANTERN, Items.LANTERN);
+        eightTwoSevenFallbacks.put(Items.OXIDIZED_COPPER_LANTERN, Items.LANTERN);
+        eightTwoSevenFallbacks.put(Items.WAXED_COPPER_LANTERN, Items.LANTERN);
+        eightTwoSevenFallbacks.put(Items.WAXED_EXPOSED_COPPER_LANTERN, Items.LANTERN);
+        eightTwoSevenFallbacks.put(Items.WAXED_WEATHERED_COPPER_LANTERN, Items.LANTERN);
+        eightTwoSevenFallbacks.put(Items.WAXED_OXIDIZED_COPPER_LANTERN, Items.LANTERN);
+        eightTwoSevenFallbacks.put(Items.EXPOSED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        eightTwoSevenFallbacks.put(Items.WEATHERED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        eightTwoSevenFallbacks.put(Items.OXIDIZED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        eightTwoSevenFallbacks.put(Items.WAXED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        eightTwoSevenFallbacks.put(Items.WAXED_EXPOSED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        eightTwoSevenFallbacks.put(Items.WAXED_WEATHERED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        eightTwoSevenFallbacks.put(Items.WAXED_OXIDIZED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        eightTwoSevenFallbacks.put(Items.COPPER_TORCH, Items.TORCH);
+        eightTwoSevenFallbacks.put(Items.COPPER_HORSE_ARMOR, Items.LEATHER_HORSE_ARMOR);
 
     static {
         // 1.21.80
         Map<Item, Item> fallbacks1_21_80 = new HashMap<>();
         fallbacks1_21_80.put(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP);
         fallbacks1_21_80.put(Items.MUSIC_DISC_TEARS, Items.MUSIC_DISC_5);
+        Map<Item, Item> eightOneNineFallbacks = new HashMap<>(eightTwoSevenFallbacks);
+        eightOneNineFallbacks.put(Items.COPPER_CHEST, Items.CHEST);
+        eightOneNineFallbacks.put(Items.EXPOSED_COPPER_CHEST, Items.CHEST);
+        eightOneNineFallbacks.put(Items.WEATHERED_COPPER_CHEST, Items.CHEST);
+        eightOneNineFallbacks.put(Items.OXIDIZED_COPPER_CHEST, Items.CHEST);
+        eightOneNineFallbacks.put(Items.WAXED_COPPER_CHEST, Items.CHEST);
+        eightOneNineFallbacks.put(Items.WAXED_EXPOSED_COPPER_CHEST, Items.CHEST);
+        eightOneNineFallbacks.put(Items.WAXED_WEATHERED_COPPER_CHEST, Items.CHEST);
+        eightOneNineFallbacks.put(Items.WAXED_OXIDIZED_COPPER_CHEST, Items.CHEST);
+        eightOneNineFallbacks.put(Items.COPPER_HELMET, Items.LEATHER_HELMET);
+        eightOneNineFallbacks.put(Items.COPPER_CHESTPLATE, Items.LEATHER_CHESTPLATE);
+        eightOneNineFallbacks.put(Items.COPPER_LEGGINGS, Items.LEATHER_LEGGINGS);
+        eightOneNineFallbacks.put(Items.COPPER_BOOTS, Items.LEATHER_BOOTS);
+        eightOneNineFallbacks.put(Items.COPPER_NUGGET, Items.IRON_NUGGET);
+        eightOneNineFallbacks.put(Items.COPPER_SWORD, Items.STONE_SWORD);
+        eightOneNineFallbacks.put(Items.COPPER_PICKAXE, Items.STONE_PICKAXE);
+        eightOneNineFallbacks.put(Items.COPPER_SHOVEL, Items.STONE_SHOVEL);
+        eightOneNineFallbacks.put(Items.COPPER_AXE, Items.STONE_AXE);
+        eightOneNineFallbacks.put(Items.COPPER_HOE, Items.STONE_HOE);
+        eightOneNineFallbacks.put(Items.COPPER_GOLEM_SPAWN_EGG, Items.IRON_GOLEM_SPAWN_EGG);
+
+        Map<Item, Item> eightOneEightFallbacks = new HashMap<>(eightOneNineFallbacks);
+        eightOneEightFallbacks.put(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP);
 
         // 1.21.70
         Map<Item, Item> fallbacks1_21_70 = new HashMap<>(fallbacks1_21_80);
@@ -250,6 +327,12 @@ public class ItemRegistryPopulator {
         paletteVersions.add(new PaletteVersion("1_21_90", Bedrock_v818.CODEC.getProtocolVersion(), Map.of(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP)));
         paletteVersions.add(new PaletteVersion("1_21_93", Bedrock_v819.CODEC.getProtocolVersion()));
         paletteVersions.add(new PaletteVersion("1_21_100", Bedrock_v827.CODEC.getProtocolVersion()));
+        List<PaletteVersion> paletteVersions = new ArrayList<>(4);
+        paletteVersions.add(new PaletteVersion("1_21_90", Bedrock_v818.CODEC.getProtocolVersion(), eightOneEightFallbacks, Conversion844_827::remapItem));
+        paletteVersions.add(new PaletteVersion("1_21_93", Bedrock_v819.CODEC.getProtocolVersion(), eightOneNineFallbacks, Conversion844_827::remapItem));
+        paletteVersions.add(new PaletteVersion("1_21_100", Bedrock_v827.CODEC.getProtocolVersion(), eightTwoSevenFallbacks, Conversion844_827::remapItem));
+        paletteVersions.add(new PaletteVersion("1_21_110", Bedrock_v844.CODEC.getProtocolVersion()));
+        paletteVersions.add(new PaletteVersion("1_21_120", Bedrock_v859.CODEC.getProtocolVersion()));
 
         GeyserBootstrap bootstrap = GeyserImpl.getInstance().getBootstrap();
 
@@ -261,13 +344,6 @@ public class ItemRegistryPopulator {
             items = GeyserImpl.JSON_MAPPER.readValue(stream, mappingItemsType);
         } catch (Exception e) {
             throw new AssertionError("Unable to load Java runtime item IDs", e);
-        }
-
-        NbtMap vanillaComponents;
-        try (InputStream stream = bootstrap.getResourceOrThrow("bedrock/item_components.nbt")) {
-            vanillaComponents = (NbtMap) NbtUtils.createGZIPReader(stream, true, true).readTag();
-        } catch (Exception e) {
-            throw new AssertionError("Unable to load Bedrock item components", e);
         }
 
         boolean customItemsAllowed = GeyserImpl.getInstance().getConfig().isAddNonBedrockItems();
@@ -296,9 +372,15 @@ public class ItemRegistryPopulator {
                 throw new AssertionError("Unable to load Bedrock runtime item IDs", e);
             }
 
+            NbtMap vanillaComponents;
+            try (InputStream stream = bootstrap.getResourceOrThrow("bedrock/item_components.%s.nbt".formatted(palette.version()))) {
+                vanillaComponents = (NbtMap) NbtUtils.createGZIPReader(stream, true, true).readTag();
+            } catch (Exception e) {
+                throw new AssertionError("Unable to load Bedrock item components", e);
+            }
+
             // Used for custom items
             int nextFreeBedrockId = 0;
-            List<ItemDefinition> componentItemData = new ObjectArrayList<>();
             Int2ObjectMap<ItemDefinition> registry = new Int2ObjectOpenHashMap<>();
             Map<String, ItemDefinition> definitions = new Object2ObjectLinkedOpenHashMap<>();
 
@@ -379,7 +461,7 @@ public class ItemRegistryPopulator {
 
             Set<Item> javaOnlyItems = new ObjectOpenHashSet<>();
             Collections.addAll(javaOnlyItems, Items.SPECTRAL_ARROW, Items.DEBUG_STICK,
-                Items.KNOWLEDGE_BOOK, Items.TIPPED_ARROW);
+                    Items.KNOWLEDGE_BOOK, Items.TIPPED_ARROW);
             if (!customItemsAllowed) {
                 javaOnlyItems.add(Items.FURNACE_MINECART);
             }
@@ -394,15 +476,14 @@ public class ItemRegistryPopulator {
                 if (javaItem == null) {
                     throw new RuntimeException("Extra item in mappings? " + entry.getKey());
                 }
-                GeyserMappingItem baseMapping;
+                GeyserMappingItem mappingItem;
                 Item replacementItem = palette.javaOnlyItems().get(javaItem);
                 if (replacementItem != null) {
-                    baseMapping = items.get(replacementItem.javaIdentifier()); // java only item, a java id fallback has been provided
+                    mappingItem = items.get(replacementItem.javaIdentifier()); // java only item, a java id fallback has been provided
                 } else {
-                    baseMapping = entry.getValue();
+                    // check if any mapping changes need to be made on this version
+                    mappingItem = palette.remapper().remap(javaItem, entry.getValue());
                 }
-                // check if any mapping changes need to be made on this version
-                GeyserMappingItem mappingItem = palette.remapper().remap(javaItem, baseMapping);
 
                 if (customItemsAllowed && javaItem == Items.FURNACE_MINECART) {
                     // Will be added later
@@ -582,11 +663,11 @@ public class ItemRegistryPopulator {
                 }
 
                 ItemMapping.ItemMappingBuilder mappingBuilder = ItemMapping.builder()
-                    .bedrockIdentifier(bedrockIdentifier.intern())
-                    .bedrockDefinition(definition)
-                    .bedrockData(mappingItem.getBedrockData())
-                    .bedrockBlockDefinition(bedrockBlock)
-                    .javaItem(javaItem);
+                        .bedrockIdentifier(bedrockIdentifier.intern())
+                        .bedrockDefinition(definition)
+                        .bedrockData(mappingItem.getBedrockData())
+                        .bedrockBlockDefinition(bedrockBlock)
+                        .javaItem(javaItem);
 
                 if (mappingItem.getToolType() != null) {
                     mappingBuilder = mappingBuilder.toolType(mappingItem.getToolType().intern());
@@ -616,20 +697,19 @@ public class ItemRegistryPopulator {
                         }
 
                         GeyserCustomMappingData customMapping = CustomItemRegistryPopulator.registerCustomItem(
-                            customItemName, javaItem, mappingItem, customItem, customProtocolId, palette.protocolVersion
+                                customItemName, javaItem, mappingItem, customItem, customProtocolId, palette.protocolVersion
                         );
 
                         if (customItem.creativeCategory().isPresent()) {
                             CreativeItemData creativeItemData = new CreativeItemData(ItemData.builder()
-                                .netId(creativeNetId.incrementAndGet())
-                                .definition(customMapping.itemDefinition())
-                                .blockDefinition(null)
-                                .count(1)
-                                .build(), creativeNetId.get(), customItem.creativeCategory().getAsInt());
+                                    .netId(creativeNetId.incrementAndGet())
+                                    .definition(customMapping.itemDefinition())
+                                    .blockDefinition(null)
+                                    .count(1)
+                                    .build(), creativeNetId.get(), customItem.creativeCategory().getAsInt());
                             creativeItems.add(creativeItemData);
                         }
                         customItemOptions.add(Pair.of(customItem.customItemOptions(), customMapping.itemDefinition()));
-                        componentItemData.add(customMapping.itemDefinition());
                         registry.put(customMapping.integerId(), customMapping.itemDefinition());
 
                         customIdMappings.put(customMapping.integerId(), customMapping.stringId());
@@ -679,13 +759,13 @@ public class ItemRegistryPopulator {
 
             // Add the lodestone compass since it doesn't exist on java but we need it for item conversion
             ItemMapping lodestoneEntry = ItemMapping.builder()
-                .javaItem(Items.COMPASS)
-                .bedrockIdentifier("minecraft:lodestone_compass")
-                .bedrockDefinition(lodestoneCompass)
-                .bedrockData(0)
-                .bedrockBlockDefinition(null)
-                .customItemOptions(Collections.emptyList())
-                .build();
+                    .javaItem(Items.COMPASS)
+                    .bedrockIdentifier("minecraft:lodestone_compass")
+                    .bedrockDefinition(lodestoneCompass)
+                    .bedrockData(0)
+                    .bedrockBlockDefinition(null)
+                    .customItemOptions(Collections.emptyList())
+                    .build();
 
             if (customItemsAllowed) {
                 // Add furnace minecart
@@ -693,16 +773,15 @@ public class ItemRegistryPopulator {
                 ItemDefinition definition = new SimpleItemDefinition("geysermc:furnace_minecart", furnaceMinecartId, ItemVersion.DATA_DRIVEN, true, registerFurnaceMinecart(furnaceMinecartId));
                 definitions.put("geysermc:furnace_minecart", definition);
                 registry.put(definition.getRuntimeId(), definition);
-                componentItemData.add(definition);
 
                 mappings.set(Items.FURNACE_MINECART.javaId(), ItemMapping.builder()
-                    .javaItem(Items.FURNACE_MINECART)
-                    .bedrockIdentifier("geysermc:furnace_minecart")
-                    .bedrockDefinition(definition)
-                    .bedrockData(0)
-                    .bedrockBlockDefinition(null)
-                    .customItemOptions(Collections.emptyList()) // TODO check for custom items with furnace minecart
-                    .build());
+                        .javaItem(Items.FURNACE_MINECART)
+                        .bedrockIdentifier("geysermc:furnace_minecart")
+                        .bedrockDefinition(definition)
+                        .bedrockData(0)
+                        .bedrockBlockDefinition(null)
+                        .customItemOptions(Collections.emptyList()) // TODO check for custom items with furnace minecart
+                        .build());
 
                 creativeItems.add(new CreativeItemData(ItemData.builder()
                     .usingNetId(true)
@@ -724,7 +803,6 @@ public class ItemRegistryPopulator {
                     int customItemId = nextFreeBedrockId++;
                     NonVanillaItemRegistration registration = CustomItemRegistryPopulator.registerCustomItem(customItem, customItemId, palette.protocolVersion);
 
-                    componentItemData.add(registration.mapping().getBedrockDefinition());
                     ItemMapping mapping = registration.mapping();
                     Item javaItem = registration.javaItem();
                     while (javaItem.javaId() >= mappings.size()) {
@@ -783,19 +861,18 @@ public class ItemRegistryPopulator {
             }
 
             ItemMappings itemMappings = ItemMappings.builder()
-                .items(mappings.toArray(new ItemMapping[0]))
-                .creativeItems(creativeItems)
-                .creativeItemGroups(creativeItemGroups)
-                .itemDefinitions(registry)
-                .componentItemData(componentItemData)
-                .storedItems(new StoredItemMappings(javaItemToMapping))
-                .javaOnlyItems(javaOnlyItems)
-                .buckets(buckets)
-                .lightBlocks(lightBlocks)
-                .lodestoneCompass(lodestoneEntry)
-                .customIdMappings(customIdMappings)
-                .customBlockItemDefinitions(customBlockItemDefinitions)
-                .build();
+                    .items(mappings.toArray(new ItemMapping[0]))
+                    .creativeItems(creativeItems)
+                    .creativeItemGroups(creativeItemGroups)
+                    .itemDefinitions(registry)
+                    .storedItems(new StoredItemMappings(javaItemToMapping))
+                    .javaOnlyItems(javaOnlyItems)
+                    .buckets(buckets)
+                    .lightBlocks(lightBlocks)
+                    .lodestoneCompass(lodestoneEntry)
+                    .customIdMappings(customIdMappings)
+                    .customBlockItemDefinitions(customBlockItemDefinitions)
+                    .build();
 
             Registries.ITEMS.register(palette.protocolVersion(), itemMappings);
 
@@ -806,7 +883,7 @@ public class ItemRegistryPopulator {
     private static NbtMap registerFurnaceMinecart(int nextFreeBedrockId) {
         NbtMapBuilder builder = NbtMap.builder();
         builder.putString("name", "geysermc:furnace_minecart")
-            .putInt("id", nextFreeBedrockId);
+                .putInt("id", nextFreeBedrockId);
 
         NbtMapBuilder itemProperties = NbtMap.builder();
 
@@ -815,8 +892,8 @@ public class ItemRegistryPopulator {
         // Not so conveniently, the way to set an icon changed in 1.20.60
         NbtMap iconMap = NbtMap.builder()
             .putCompound("textures", NbtMap.builder()
-                .putString("default", "minecart_furnace")
-                .build())
+                    .putString("default", "minecart_furnace")
+                    .build())
             .build();
         itemProperties.putCompound("minecraft:icon", iconMap);
         componentBuilder.putCompound("minecraft:display_name", NbtMap.builder().putString("value", "item.minecartFurnace.name").build());
@@ -824,10 +901,10 @@ public class ItemRegistryPopulator {
         // Indicate that the arm animation should play on rails
         List<NbtMap> useOnTag = Collections.singletonList(NbtMap.builder().putString("tags", "q.any_tag('rail')").build());
         componentBuilder.putCompound("minecraft:entity_placer", NbtMap.builder()
-            .putList("dispense_on", NbtType.COMPOUND, useOnTag)
-            .putString("entity", "minecraft:minecart")
-            .putList("use_on", NbtType.COMPOUND, useOnTag)
-            .build());
+                .putList("dispense_on", NbtType.COMPOUND, useOnTag)
+                .putString("entity", "minecraft:minecart")
+                .putList("use_on", NbtType.COMPOUND, useOnTag)
+                .build());
 
         // We always want to allow offhand usage when we can - matches Java Edition
         itemProperties.putBoolean("allow_off_hand", true);
