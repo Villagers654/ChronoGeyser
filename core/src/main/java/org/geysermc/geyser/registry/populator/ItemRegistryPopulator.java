@@ -137,164 +137,165 @@ public class ItemRegistryPopulator {
     }
 
     private static final Map<Integer, Map<Item, Item>> FALLBACKS_BY_PROTOCOL = new HashMap<>();
-    public static void populate() {
-        Map<Item, Item> eightTwoSevenFallbacks = new HashMap<>();
-        eightTwoSevenFallbacks.put(Items.ACACIA_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.BAMBOO_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.BIRCH_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.CHERRY_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.CRIMSON_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.DARK_OAK_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.JUNGLE_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.MANGROVE_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.OAK_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.PALE_OAK_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.SPRUCE_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.WARPED_SHELF, Items.CHISELED_BOOKSHELF);
-        eightTwoSevenFallbacks.put(Items.COPPER_BARS, Items.IRON_BARS);
-        eightTwoSevenFallbacks.put(Items.EXPOSED_COPPER_BARS, Items.IRON_BARS);
-        eightTwoSevenFallbacks.put(Items.WEATHERED_COPPER_BARS, Items.IRON_BARS);
-        eightTwoSevenFallbacks.put(Items.OXIDIZED_COPPER_BARS, Items.IRON_BARS);
-        eightTwoSevenFallbacks.put(Items.WAXED_COPPER_BARS, Items.IRON_BARS);
-        eightTwoSevenFallbacks.put(Items.WAXED_EXPOSED_COPPER_BARS, Items.IRON_BARS);
-        eightTwoSevenFallbacks.put(Items.WAXED_WEATHERED_COPPER_BARS, Items.IRON_BARS);
-        eightTwoSevenFallbacks.put(Items.WAXED_OXIDIZED_COPPER_BARS, Items.IRON_BARS);
-        eightTwoSevenFallbacks.put(Items.COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
-        eightTwoSevenFallbacks.put(Items.EXPOSED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
-        eightTwoSevenFallbacks.put(Items.WEATHERED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
-        eightTwoSevenFallbacks.put(Items.OXIDIZED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
-        eightTwoSevenFallbacks.put(Items.WAXED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
-        eightTwoSevenFallbacks.put(Items.WAXED_EXPOSED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
-        eightTwoSevenFallbacks.put(Items.WAXED_WEATHERED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
-        eightTwoSevenFallbacks.put(Items.WAXED_OXIDIZED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
-        eightTwoSevenFallbacks.put(Items.COPPER_LANTERN, Items.LANTERN);
-        eightTwoSevenFallbacks.put(Items.EXPOSED_COPPER_LANTERN, Items.LANTERN);
-        eightTwoSevenFallbacks.put(Items.WEATHERED_COPPER_LANTERN, Items.LANTERN);
-        eightTwoSevenFallbacks.put(Items.OXIDIZED_COPPER_LANTERN, Items.LANTERN);
-        eightTwoSevenFallbacks.put(Items.WAXED_COPPER_LANTERN, Items.LANTERN);
-        eightTwoSevenFallbacks.put(Items.WAXED_EXPOSED_COPPER_LANTERN, Items.LANTERN);
-        eightTwoSevenFallbacks.put(Items.WAXED_WEATHERED_COPPER_LANTERN, Items.LANTERN);
-        eightTwoSevenFallbacks.put(Items.WAXED_OXIDIZED_COPPER_LANTERN, Items.LANTERN);
-        eightTwoSevenFallbacks.put(Items.EXPOSED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
-        eightTwoSevenFallbacks.put(Items.WEATHERED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
-        eightTwoSevenFallbacks.put(Items.OXIDIZED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
-        eightTwoSevenFallbacks.put(Items.WAXED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
-        eightTwoSevenFallbacks.put(Items.WAXED_EXPOSED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
-        eightTwoSevenFallbacks.put(Items.WAXED_WEATHERED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
-        eightTwoSevenFallbacks.put(Items.WAXED_OXIDIZED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
-        eightTwoSevenFallbacks.put(Items.COPPER_TORCH, Items.TORCH);
-        eightTwoSevenFallbacks.put(Items.COPPER_HORSE_ARMOR, Items.LEATHER_HORSE_ARMOR);
 
     static {
-        // 1.21.80
-        Map<Item, Item> fallbacks1_21_80 = new HashMap<>();
-        fallbacks1_21_80.put(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP);
-        fallbacks1_21_80.put(Items.MUSIC_DISC_TEARS, Items.MUSIC_DISC_5);
-        Map<Item, Item> eightOneNineFallbacks = new HashMap<>(eightTwoSevenFallbacks);
-        eightOneNineFallbacks.put(Items.COPPER_CHEST, Items.CHEST);
-        eightOneNineFallbacks.put(Items.EXPOSED_COPPER_CHEST, Items.CHEST);
-        eightOneNineFallbacks.put(Items.WEATHERED_COPPER_CHEST, Items.CHEST);
-        eightOneNineFallbacks.put(Items.OXIDIZED_COPPER_CHEST, Items.CHEST);
-        eightOneNineFallbacks.put(Items.WAXED_COPPER_CHEST, Items.CHEST);
-        eightOneNineFallbacks.put(Items.WAXED_EXPOSED_COPPER_CHEST, Items.CHEST);
-        eightOneNineFallbacks.put(Items.WAXED_WEATHERED_COPPER_CHEST, Items.CHEST);
-        eightOneNineFallbacks.put(Items.WAXED_OXIDIZED_COPPER_CHEST, Items.CHEST);
-        eightOneNineFallbacks.put(Items.COPPER_HELMET, Items.LEATHER_HELMET);
-        eightOneNineFallbacks.put(Items.COPPER_CHESTPLATE, Items.LEATHER_CHESTPLATE);
-        eightOneNineFallbacks.put(Items.COPPER_LEGGINGS, Items.LEATHER_LEGGINGS);
-        eightOneNineFallbacks.put(Items.COPPER_BOOTS, Items.LEATHER_BOOTS);
-        eightOneNineFallbacks.put(Items.COPPER_NUGGET, Items.IRON_NUGGET);
-        eightOneNineFallbacks.put(Items.COPPER_SWORD, Items.STONE_SWORD);
-        eightOneNineFallbacks.put(Items.COPPER_PICKAXE, Items.STONE_PICKAXE);
-        eightOneNineFallbacks.put(Items.COPPER_SHOVEL, Items.STONE_SHOVEL);
-        eightOneNineFallbacks.put(Items.COPPER_AXE, Items.STONE_AXE);
-        eightOneNineFallbacks.put(Items.COPPER_HOE, Items.STONE_HOE);
-        eightOneNineFallbacks.put(Items.COPPER_GOLEM_SPAWN_EGG, Items.IRON_GOLEM_SPAWN_EGG);
+        /*
+         * Build fallback maps in a consistent, descending chain so that lower (older)
+         * protocol versions inherit all mappings from higher (newer) protocol versions.
+         *
+         * Naming convention: fallbacks_v<bedrock_version_number> (e.g. fallbacks_v827)
+         * Registration uses Bedrock_vXXX.CODEC.getProtocolVersion() as the map key.
+         */
 
-        Map<Item, Item> eightOneEightFallbacks = new HashMap<>(eightOneNineFallbacks);
-        eightOneEightFallbacks.put(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP);
+        // 1.21.100 / v827 - base for newer fallbacks (contains many copper/shelf -> fallback mappings)
+        Map<Item, Item> fallbacks_v827 = new HashMap<>();
+        fallbacks_v827.put(Items.ACACIA_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.BAMBOO_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.BIRCH_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.CHERRY_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.CRIMSON_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.DARK_OAK_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.JUNGLE_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.MANGROVE_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.OAK_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.PALE_OAK_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.SPRUCE_SHELF, Items.CHISELED_BOOKSHELF);
+        fallbacks_v827.put(Items.WARPED_SHELF, Items.CHISELED_BOOKSHELF);
 
-        // 1.21.70
-        Map<Item, Item> fallbacks1_21_70 = new HashMap<>(fallbacks1_21_80);
-        fallbacks1_21_70.put(Items.BLACK_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.BLUE_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.BROWN_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.RED_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.GREEN_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.YELLOW_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.ORANGE_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.MAGENTA_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.LIGHT_BLUE_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.LIME_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.PINK_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.GRAY_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.CYAN_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.PURPLE_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.LIGHT_GRAY_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.WHITE_HARNESS, Items.SADDLE);
-        fallbacks1_21_70.put(Items.HAPPY_GHAST_SPAWN_EGG, Items.EGG);
-        fallbacks1_21_70.put(Items.DRIED_GHAST, Items.PLAYER_HEAD);
+        fallbacks_v827.put(Items.COPPER_BARS, Items.IRON_BARS);
+        fallbacks_v827.put(Items.EXPOSED_COPPER_BARS, Items.IRON_BARS);
+        fallbacks_v827.put(Items.WEATHERED_COPPER_BARS, Items.IRON_BARS);
+        fallbacks_v827.put(Items.OXIDIZED_COPPER_BARS, Items.IRON_BARS);
+        fallbacks_v827.put(Items.WAXED_COPPER_BARS, Items.IRON_BARS);
+        fallbacks_v827.put(Items.WAXED_EXPOSED_COPPER_BARS, Items.IRON_BARS);
+        fallbacks_v827.put(Items.WAXED_WEATHERED_COPPER_BARS, Items.IRON_BARS);
+        fallbacks_v827.put(Items.WAXED_OXIDIZED_COPPER_BARS, Items.IRON_BARS);
 
-        // 1.21.60
-        Map<Item, Item> fallbacks1_21_60 = new HashMap<>(fallbacks1_21_70);
-        fallbacks1_21_60.put(Items.BUSH, Items.SHORT_GRASS);
-        fallbacks1_21_60.put(Items.CACTUS_FLOWER, Items.BUBBLE_CORAL_FAN);
-        fallbacks1_21_60.put(Items.FIREFLY_BUSH, Items.SHORT_GRASS);
-        fallbacks1_21_60.put(Items.LEAF_LITTER, Items.PINK_PETALS);
-        fallbacks1_21_60.put(Items.SHORT_DRY_GRASS, Items.DEAD_BUSH);
-        fallbacks1_21_60.put(Items.TALL_DRY_GRASS, Items.TALL_GRASS);
-        fallbacks1_21_60.put(Items.WILDFLOWERS, Items.PINK_PETALS);
-        fallbacks1_21_60.put(Items.BLUE_EGG, Items.EGG);
-        fallbacks1_21_60.put(Items.BROWN_EGG, Items.EGG);
+        fallbacks_v827.put(Items.COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        fallbacks_v827.put(Items.EXPOSED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        fallbacks_v827.put(Items.WEATHERED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        fallbacks_v827.put(Items.OXIDIZED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        fallbacks_v827.put(Items.WAXED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        fallbacks_v827.put(Items.WAXED_EXPOSED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        fallbacks_v827.put(Items.WAXED_WEATHERED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
+        fallbacks_v827.put(Items.WAXED_OXIDIZED_COPPER_GOLEM_STATUE, Items.ARMOR_STAND);
 
-        // 1.21.50
-        Map<Item, Item> fallbacks1_21_50 = new HashMap<>(fallbacks1_21_60);
-        fallbacks1_21_50.put(Items.TEST_BLOCK, Items.STRUCTURE_BLOCK);
-        fallbacks1_21_50.put(Items.TEST_INSTANCE_BLOCK, Items.JIGSAW);
+        fallbacks_v827.put(Items.COPPER_LANTERN, Items.LANTERN);
+        fallbacks_v827.put(Items.EXPOSED_COPPER_LANTERN, Items.LANTERN);
+        fallbacks_v827.put(Items.WEATHERED_COPPER_LANTERN, Items.LANTERN);
+        fallbacks_v827.put(Items.OXIDIZED_COPPER_LANTERN, Items.LANTERN);
+        fallbacks_v827.put(Items.WAXED_COPPER_LANTERN, Items.LANTERN);
+        fallbacks_v827.put(Items.WAXED_EXPOSED_COPPER_LANTERN, Items.LANTERN);
+        fallbacks_v827.put(Items.WAXED_WEATHERED_COPPER_LANTERN, Items.LANTERN);
+        fallbacks_v827.put(Items.WAXED_OXIDIZED_COPPER_LANTERN, Items.LANTERN);
 
-        // 1.21.40
-        Map<Item, Item> fallbacks1_21_40 = new HashMap<>(fallbacks1_21_50);
-        fallbacks1_21_40.put(Items.PALE_OAK_PLANKS, Items.BIRCH_PLANKS);
-        fallbacks1_21_40.put(Items.PALE_OAK_FENCE, Items.BIRCH_FENCE);
-        fallbacks1_21_40.put(Items.PALE_OAK_FENCE_GATE, Items.BIRCH_FENCE_GATE);
-        fallbacks1_21_40.put(Items.PALE_OAK_STAIRS, Items.BIRCH_STAIRS);
-        fallbacks1_21_40.put(Items.PALE_OAK_DOOR, Items.BIRCH_DOOR);
-        fallbacks1_21_40.put(Items.PALE_OAK_TRAPDOOR, Items.BIRCH_TRAPDOOR);
-        fallbacks1_21_40.put(Items.PALE_OAK_SLAB, Items.BIRCH_SLAB);
-        fallbacks1_21_40.put(Items.PALE_OAK_LOG, Items.BIRCH_LOG);
-        fallbacks1_21_40.put(Items.STRIPPED_PALE_OAK_LOG, Items.STRIPPED_BIRCH_LOG);
-        fallbacks1_21_40.put(Items.PALE_OAK_WOOD, Items.BIRCH_WOOD);
-        fallbacks1_21_40.put(Items.PALE_OAK_LEAVES, Items.BIRCH_LEAVES);
-        fallbacks1_21_40.put(Items.PALE_OAK_SAPLING, Items.BIRCH_SAPLING);
-        fallbacks1_21_40.put(Items.STRIPPED_PALE_OAK_WOOD, Items.STRIPPED_BIRCH_WOOD);
-        fallbacks1_21_40.put(Items.PALE_OAK_SIGN, Items.BIRCH_SIGN);
-        fallbacks1_21_40.put(Items.PALE_OAK_HANGING_SIGN, Items.BIRCH_HANGING_SIGN);
-        fallbacks1_21_40.put(Items.PALE_OAK_BOAT, Items.BIRCH_BOAT);
-        fallbacks1_21_40.put(Items.PALE_OAK_CHEST_BOAT, Items.BIRCH_CHEST_BOAT);
-        fallbacks1_21_40.put(Items.PALE_OAK_BUTTON, Items.BIRCH_BUTTON);
-        fallbacks1_21_40.put(Items.PALE_OAK_PRESSURE_PLATE, Items.BIRCH_PRESSURE_PLATE);
-        fallbacks1_21_40.put(Items.RESIN_CLUMP, Items.RAW_COPPER);
-        fallbacks1_21_40.put(Items.RESIN_BRICK_WALL, Items.RED_SANDSTONE_WALL);
-        fallbacks1_21_40.put(Items.RESIN_BRICK_STAIRS, Items.RED_SANDSTONE_STAIRS);
-        fallbacks1_21_40.put(Items.RESIN_BRICK_SLAB, Items.RED_SANDSTONE_SLAB);
-        fallbacks1_21_40.put(Items.RESIN_BLOCK, Items.RED_SANDSTONE);
-        fallbacks1_21_40.put(Items.RESIN_BRICK, Items.BRICK);
-        fallbacks1_21_40.put(Items.RESIN_BRICKS, Items.CUT_RED_SANDSTONE);
-        fallbacks1_21_40.put(Items.CHISELED_RESIN_BRICKS, Items.CHISELED_RED_SANDSTONE);
-        fallbacks1_21_40.put(Items.CLOSED_EYEBLOSSOM, Items.WHITE_TULIP);
-        fallbacks1_21_40.put(Items.OPEN_EYEBLOSSOM, Items.OXEYE_DAISY);
-        fallbacks1_21_40.put(Items.PALE_MOSS_BLOCK, Items.MOSS_BLOCK);
-        fallbacks1_21_40.put(Items.PALE_MOSS_CARPET, Items.MOSS_CARPET);
-        fallbacks1_21_40.put(Items.PALE_HANGING_MOSS, Items.HANGING_ROOTS);
-        fallbacks1_21_40.put(Items.CREAKING_HEART, Items.CHISELED_POLISHED_BLACKSTONE);
-        fallbacks1_21_40.put(Items.CREAKING_SPAWN_EGG, Items.HOGLIN_SPAWN_EGG);
+        fallbacks_v827.put(Items.EXPOSED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        fallbacks_v827.put(Items.WEATHERED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        fallbacks_v827.put(Items.OXIDIZED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        fallbacks_v827.put(Items.WAXED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        fallbacks_v827.put(Items.WAXED_EXPOSED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        fallbacks_v827.put(Items.WAXED_WEATHERED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
+        fallbacks_v827.put(Items.WAXED_OXIDIZED_LIGHTNING_ROD, Items.LIGHTNING_ROD);
 
-        // Register fallback maps by protocol version
-        FALLBACKS_BY_PROTOCOL.put(Bedrock_v800.CODEC.getProtocolVersion(), fallbacks1_21_80);
-        FALLBACKS_BY_PROTOCOL.put(Bedrock_v786.CODEC.getProtocolVersion(), fallbacks1_21_70);
-        FALLBACKS_BY_PROTOCOL.put(Bedrock_v776.CODEC.getProtocolVersion(), fallbacks1_21_60);
-        FALLBACKS_BY_PROTOCOL.put(Bedrock_v766.CODEC.getProtocolVersion(), fallbacks1_21_50);
-        FALLBACKS_BY_PROTOCOL.put(Bedrock_v748.CODEC.getProtocolVersion(), fallbacks1_21_40);
+        fallbacks_v827.put(Items.COPPER_TORCH, Items.TORCH);
+        fallbacks_v827.put(Items.COPPER_HORSE_ARMOR, Items.LEATHER_HORSE_ARMOR);
+
+        // 1.21.93 / v819 - inherit everything from v827, then add/override v819-specific entries if needed
+        Map<Item, Item> fallbacks_v819 = new HashMap<>(fallbacks_v827);
+        // (no unique additions for v819 in the original except later use in paletteVersions; keep for future additions)
+
+        // 1.21.90 / v818 - inherit from v819, then add the single MUSIC_DISC_LAVA_CHICKEN mapping
+        Map<Item, Item> fallbacks_v818 = new HashMap<>(fallbacks_v819);
+        fallbacks_v818.put(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP);
+
+        // 1.21.80 / v800 - inherit from v818 and add the MUSIC_DISC_TEARS mapping that existed for 1.21.80
+        Map<Item, Item> fallbacks_v800 = new HashMap<>(fallbacks_v818);
+        fallbacks_v800.put(Items.MUSIC_DISC_TEARS, Items.MUSIC_DISC_5);
+
+        // 1.21.70 / v786 - inherit from v800, then add harnesses + ghast items
+        Map<Item, Item> fallbacks_v786 = new HashMap<>(fallbacks_v800);
+        fallbacks_v786.put(Items.BLACK_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.BLUE_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.BROWN_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.RED_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.GREEN_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.YELLOW_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.ORANGE_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.MAGENTA_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.LIGHT_BLUE_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.LIME_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.PINK_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.GRAY_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.CYAN_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.PURPLE_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.LIGHT_GRAY_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.WHITE_HARNESS, Items.SADDLE);
+        fallbacks_v786.put(Items.HAPPY_GHAST_SPAWN_EGG, Items.EGG);
+        fallbacks_v786.put(Items.DRIED_GHAST, Items.PLAYER_HEAD);
+
+        // 1.21.60 / v776 - inherit from v786, then add various plant/egg fallbacks
+        Map<Item, Item> fallbacks_v776 = new HashMap<>(fallbacks_v786);
+        fallbacks_v776.put(Items.BUSH, Items.SHORT_GRASS);
+        fallbacks_v776.put(Items.CACTUS_FLOWER, Items.BUBBLE_CORAL_FAN);
+        fallbacks_v776.put(Items.FIREFLY_BUSH, Items.SHORT_GRASS);
+        fallbacks_v776.put(Items.LEAF_LITTER, Items.PINK_PETALS);
+        fallbacks_v776.put(Items.SHORT_DRY_GRASS, Items.DEAD_BUSH);
+        fallbacks_v776.put(Items.TALL_DRY_GRASS, Items.TALL_GRASS);
+        fallbacks_v776.put(Items.WILDFLOWERS, Items.PINK_PETALS);
+        fallbacks_v776.put(Items.BLUE_EGG, Items.EGG);
+        fallbacks_v776.put(Items.BROWN_EGG, Items.EGG);
+
+        // 1.21.50 / v766 - inherit from v776, then add test blocks
+        Map<Item, Item> fallbacks_v766 = new HashMap<>(fallbacks_v776);
+        fallbacks_v766.put(Items.TEST_BLOCK, Items.STRUCTURE_BLOCK);
+        fallbacks_v766.put(Items.TEST_INSTANCE_BLOCK, Items.JIGSAW);
+
+        // 1.21.40 / v748 - inherit from v766, then add pale oak/resin/etc fallbacks (the "1.21.40" set)
+        Map<Item, Item> fallbacks_v748 = new HashMap<>(fallbacks_v766);
+        fallbacks_v748.put(Items.PALE_OAK_PLANKS, Items.BIRCH_PLANKS);
+        fallbacks_v748.put(Items.PALE_OAK_FENCE, Items.BIRCH_FENCE);
+        fallbacks_v748.put(Items.PALE_OAK_FENCE_GATE, Items.BIRCH_FENCE_GATE);
+        fallbacks_v748.put(Items.PALE_OAK_STAIRS, Items.BIRCH_STAIRS);
+        fallbacks_v748.put(Items.PALE_OAK_DOOR, Items.BIRCH_DOOR);
+        fallbacks_v748.put(Items.PALE_OAK_TRAPDOOR, Items.BIRCH_TRAPDOOR);
+        fallbacks_v748.put(Items.PALE_OAK_SLAB, Items.BIRCH_SLAB);
+        fallbacks_v748.put(Items.PALE_OAK_LOG, Items.BIRCH_LOG);
+        fallbacks_v748.put(Items.STRIPPED_PALE_OAK_LOG, Items.STRIPPED_BIRCH_LOG);
+        fallbacks_v748.put(Items.PALE_OAK_WOOD, Items.BIRCH_WOOD);
+        fallbacks_v748.put(Items.PALE_OAK_LEAVES, Items.BIRCH_LEAVES);
+        fallbacks_v748.put(Items.PALE_OAK_SAPLING, Items.BIRCH_SAPLING);
+        fallbacks_v748.put(Items.STRIPPED_PALE_OAK_WOOD, Items.STRIPPED_BIRCH_WOOD);
+        fallbacks_v748.put(Items.PALE_OAK_SIGN, Items.BIRCH_SIGN);
+        fallbacks_v748.put(Items.PALE_OAK_HANGING_SIGN, Items.BIRCH_HANGING_SIGN);
+        fallbacks_v748.put(Items.PALE_OAK_BOAT, Items.BIRCH_BOAT);
+        fallbacks_v748.put(Items.PALE_OAK_CHEST_BOAT, Items.BIRCH_CHEST_BOAT);
+        fallbacks_v748.put(Items.PALE_OAK_BUTTON, Items.BIRCH_BUTTON);
+        fallbacks_v748.put(Items.PALE_OAK_PRESSURE_PLATE, Items.BIRCH_PRESSURE_PLATE);
+        fallbacks_v748.put(Items.RESIN_CLUMP, Items.RAW_COPPER);
+        fallbacks_v748.put(Items.RESIN_BRICK_WALL, Items.RED_SANDSTONE_WALL);
+        fallbacks_v748.put(Items.RESIN_BRICK_STAIRS, Items.RED_SANDSTONE_STAIRS);
+        fallbacks_v748.put(Items.RESIN_BRICK_SLAB, Items.RED_SANDSTONE_SLAB);
+        fallbacks_v748.put(Items.RESIN_BLOCK, Items.RED_SANDSTONE);
+        fallbacks_v748.put(Items.RESIN_BRICK, Items.BRICK);
+        fallbacks_v748.put(Items.RESIN_BRICKS, Items.CUT_RED_SANDSTONE);
+        fallbacks_v748.put(Items.CHISELED_RESIN_BRICKS, Items.CHISELED_RED_SANDSTONE);
+        fallbacks_v748.put(Items.CLOSED_EYEBLOSSOM, Items.WHITE_TULIP);
+        fallbacks_v748.put(Items.OPEN_EYEBLOSSOM, Items.OXEYE_DAISY);
+        fallbacks_v748.put(Items.PALE_MOSS_BLOCK, Items.MOSS_BLOCK);
+        fallbacks_v748.put(Items.PALE_MOSS_CARPET, Items.MOSS_CARPET);
+        fallbacks_v748.put(Items.PALE_HANGING_MOSS, Items.HANGING_ROOTS);
+        fallbacks_v748.put(Items.CREAKING_HEART, Items.CHISELED_POLISHED_BLACKSTONE);
+        fallbacks_v748.put(Items.CREAKING_SPAWN_EGG, Items.HOGLIN_SPAWN_EGG);
+
+        // Register all maps by their protocol versions so getFallbacks(...) works consistently
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v827.CODEC.getProtocolVersion(), fallbacks_v827);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v819.CODEC.getProtocolVersion(), fallbacks_v819);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v818.CODEC.getProtocolVersion(), fallbacks_v818);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v800.CODEC.getProtocolVersion(), fallbacks_v800);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v786.CODEC.getProtocolVersion(), fallbacks_v786);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v776.CODEC.getProtocolVersion(), fallbacks_v776);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v766.CODEC.getProtocolVersion(), fallbacks_v766);
+        FALLBACKS_BY_PROTOCOL.put(Bedrock_v748.CODEC.getProtocolVersion(), fallbacks_v748);
     }
 
     /**
@@ -311,7 +312,7 @@ public class ItemRegistryPopulator {
         List<Item> bundles = List.of(Items.BUNDLE, Items.BLACK_BUNDLE, Items.BLUE_BUNDLE, Items.BROWN_BUNDLE, Items.CYAN_BUNDLE, Items.GRAY_BUNDLE,
             Items.GREEN_BUNDLE, Items.LIGHT_BLUE_BUNDLE, Items.LIGHT_GRAY_BUNDLE, Items.LIME_BUNDLE, Items.MAGENTA_BUNDLE, Items.ORANGE_BUNDLE, Items.RED_BUNDLE,
             Items.PINK_BUNDLE, Items.PURPLE_BUNDLE, Items.WHITE_BUNDLE, Items.YELLOW_BUNDLE);
-        Map<Item, Item> pre1_21_2Items = new HashMap<>(FALLBACKS_BY_PROTOCOL.get(748));
+        Map<Item, Item> pre1_21_2Items = new HashMap<>(getFallbacks(Bedrock_v748.CODEC.getProtocolVersion()));
         bundles.forEach(bundle -> pre1_21_2Items.put(bundle, Items.SHULKER_SHELL));
 
         List<PaletteVersion> paletteVersions = new ArrayList<>();
@@ -327,10 +328,11 @@ public class ItemRegistryPopulator {
         paletteVersions.add(new PaletteVersion("1_21_90", Bedrock_v818.CODEC.getProtocolVersion(), Map.of(Items.MUSIC_DISC_LAVA_CHICKEN, Items.MUSIC_DISC_CHIRP)));
         paletteVersions.add(new PaletteVersion("1_21_93", Bedrock_v819.CODEC.getProtocolVersion()));
         paletteVersions.add(new PaletteVersion("1_21_100", Bedrock_v827.CODEC.getProtocolVersion()));
-        List<PaletteVersion> paletteVersions = new ArrayList<>(4);
-        paletteVersions.add(new PaletteVersion("1_21_90", Bedrock_v818.CODEC.getProtocolVersion(), eightOneEightFallbacks, Conversion844_827::remapItem));
-        paletteVersions.add(new PaletteVersion("1_21_93", Bedrock_v819.CODEC.getProtocolVersion(), eightOneNineFallbacks, Conversion844_827::remapItem));
-        paletteVersions.add(new PaletteVersion("1_21_100", Bedrock_v827.CODEC.getProtocolVersion(), eightTwoSevenFallbacks, Conversion844_827::remapItem));
+        // Keep the historical explicit maps for these older versions, but format them consistently
+        // (these local maps were created above in the static initializer, so pass them here via getFallbacks when appropriate)
+        paletteVersions.add(new PaletteVersion("1_21_90", Bedrock_v818.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v818.CODEC.getProtocolVersion()), Conversion844_827::remapItem));
+        paletteVersions.add(new PaletteVersion("1_21_93", Bedrock_v819.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v819.CODEC.getProtocolVersion()), Conversion844_827::remapItem));
+        paletteVersions.add(new PaletteVersion("1_21_100", Bedrock_v827.CODEC.getProtocolVersion(), getFallbacks(Bedrock_v827.CODEC.getProtocolVersion()), Conversion844_827::remapItem));
         paletteVersions.add(new PaletteVersion("1_21_110", Bedrock_v844.CODEC.getProtocolVersion()));
         paletteVersions.add(new PaletteVersion("1_21_120", Bedrock_v859.CODEC.getProtocolVersion()));
 

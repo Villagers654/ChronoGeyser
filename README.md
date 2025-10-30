@@ -27,7 +27,8 @@ Special thanks go to:
 
 * **Bedrock Edition**:
 
-  * ✅ Current: **1.20.80 – 1.21.100**
+  * ✅ Stable: **1.21.30 – 1.21.120**
+  * 🔨 Beta: **1.20.80 - 1.21.20**
   * 🚧 Planned: **1.17.10 and above**
 
 * **Java Edition**: Matches the versions supported by Geyser, [ViaVersion](https://github.com/ViaVersion/ViaVersion) can be used to extend Java support.
