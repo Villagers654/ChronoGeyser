@@ -51,15 +51,6 @@ ChronoGeyser setup is identical to Geyser’s, it should be a drop-in replacemen
 
 ---
 
-## Goals and Roadmap
-
-* Expand stable support for **Bedrock 1.17.10 → latest**
-* Keep upstream Geyser features and compatibility
-* Smooth out movement, combat, and entity sync across different Bedrock generations
-* Preserve playability for older Bedrock clients on modern Java servers
-
----
-
 ## Known Limitations
 
 Some features cannot be implemented due to fundamental differences between versions of the game, such as dried ghasts in version 1.21.70 and older.
